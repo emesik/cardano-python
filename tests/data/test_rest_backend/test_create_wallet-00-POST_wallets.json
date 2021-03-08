@@ -1,0 +1,49 @@
+{
+  "address_pool_gap": 20,
+  "assets": {
+    "available": [],
+    "total": []
+  },
+  "balance": {
+    "available": {
+      "quantity": 0,
+      "unit": "lovelace"
+    },
+    "reward": {
+      "quantity": 0,
+      "unit": "lovelace"
+    },
+    "total": {
+      "quantity": 0,
+      "unit": "lovelace"
+    }
+  },
+  "delegation": {
+    "active": {
+      "status": "not_delegating"
+    },
+    "next": []
+  },
+  "id": "eff9cc89621111677a501493ace8c3f05608c0ce",
+  "name": "test wallet",
+  "passphrase": {
+    "last_updated_at": "2021-03-08T13:17:09.403390176Z"
+  },
+  "state": {
+    "progress": {
+      "quantity": 0,
+      "unit": "percent"
+    },
+    "status": "syncing"
+  },
+  "tip": {
+    "absolute_slot_number": 0,
+    "epoch_number": 0,
+    "height": {
+      "quantity": 0,
+      "unit": "block"
+    },
+    "slot_number": 0,
+    "time": "2017-09-23T21:44:51Z"
+  }
+}
