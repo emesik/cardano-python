@@ -17,6 +17,8 @@ class NumbersTestCase(unittest.TestCase):
         with self.assertWarns(RuntimeWarning):
             self.assertTrue(to_lovelaces(1.0))
         self.assertRaises(ValueError, to_lovelaces, '1')
+        with self.assertWarns(RuntimeWarning):
+            self.assertTrue(as_ada(1.0))
 
     def test_rounding(self):
         self.assertEqual(to_lovelaces(Decimal('1.0000004')), 1000000)
