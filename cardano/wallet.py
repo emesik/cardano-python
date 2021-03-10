@@ -1,6 +1,6 @@
 import collections
 
-from .address import address
+from .address import Address
 
 
 class WalletService(object):
@@ -32,7 +32,7 @@ class Wallet(object):
             raise ValueError("Wallet of id '{:s}' doesn't exist.".format(wid))
 
     def addresses(self):
-        return [address(addr, wallet=self) for addr in self.backend.addresses(self.wid)]
+        return [Address(addr, wallet=self) for addr in self.backend.addresses(self.wid)]
 
     def balance(self):
         return self.backend.balance(self.wid)

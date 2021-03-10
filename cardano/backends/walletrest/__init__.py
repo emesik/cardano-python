@@ -3,7 +3,7 @@ import logging
 import operator
 import requests
 
-from ...wallet import Wallet, Balance
+from ...wallet import Balance
 from ...numbers import from_lovelaces
 from . import exceptions
 
