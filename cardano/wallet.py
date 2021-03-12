@@ -1,6 +1,7 @@
 import collections
 
 from .address import Address
+from .transaction import Transaction
 
 
 class WalletService(object):
@@ -42,3 +43,6 @@ class Wallet(object):
 
     def delete(self):
         return self.backend.delete_wallet(self.wid)
+
+    def transactions(self, start=None, end=None, order="ascending"):
+        return self.backend.transactions(self.wid, start=start, end=end, order=order)

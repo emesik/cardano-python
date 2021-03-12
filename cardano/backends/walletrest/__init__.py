@@ -3,9 +3,11 @@ import logging
 import operator
 import requests
 
-from ...wallet import Balance
 from ...numbers import from_lovelaces
+from ...transaction import Transaction
+from ...wallet import Balance
 from . import exceptions
+from . import serializers
 
 _log = logging.getLogger(__name__)
 
@@ -104,3 +106,20 @@ class WalletREST(object):
     def addresses(self, wid):
         adata = self.raw_request("GET", "wallets/{:s}/addresses".format(wid))
         return map(operator.itemgetter("id"), adata)
+
+    def _txdata2txargs(self, txd):
+        return Transaction(
+            amount=serializers.get_amount(txd["amount"]),
+            fee=serializers.get_amount(txd["fee"]),
+            inserted_at=serializers.get_block_position(txd["inserted_at"]),
+            expires_at=serializers.get_block_position(txd["expires_at"]),
+            pending_since=serializers.get_block_position(txd["pending_since"]),
+            inputs=[serializers.get_input(inp) for inp in txd["inputs"]],
+            outputs=[serializers.get_output(outp) for outp in txd["outputs"]],
+        )
+
+    def transactions(self, wid, start=None, end=None, order="ascending"):
+        return [
+            self._txdata2txargs(txd)
+            for txd in self.raw_request("GET", "wallets/{:s}/transactions".format(wid))
+        ]

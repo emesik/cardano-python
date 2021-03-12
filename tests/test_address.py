@@ -24,7 +24,9 @@ class TestComparisons(unittest.TestCase):
 
     def test_cmp_different_address(self):
         addr1 = Address("addr1v8fet8gavr6elqt6q50skkjf025zthqu6vr56l5k39sp9aqlvz2g4")
-        addr2 = Address("addr1XXX") #TODO: put some real address here once validation present
+        addr2 = Address(
+            "addr1XXX"
+        )  # TODO: put some real address here once validation present
         self.assertNotEqual(addr1, addr2)
 
     def test_cmp_address_to_string(self):

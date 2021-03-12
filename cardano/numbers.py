@@ -1,3 +1,4 @@
+import collections
 from decimal import Decimal
 from warnings import warn
 
@@ -12,10 +13,13 @@ def to_lovelaces(amount):
             "float (not recommended) are accepted as amounts."
         )
     if isinstance(amount, float):
-        warn("to_lovelaces() received amount of float type ({:f}). It is STRONGLY DISCOURAGED "
+        warn(
+            "to_lovelaces() received amount of float type ({:f}). It is STRONGLY DISCOURAGED "
             "to use floating-point numbers for monetary operations due to rounding errors".format(
-                amount),
-            RuntimeWarning)
+                amount
+            ),
+            RuntimeWarning,
+        )
     return int(amount * 10 ** 6)
 
 
@@ -27,8 +31,16 @@ def from_lovelaces(amount):
 def as_ada(amount):
     """Return the amount rounded to maximal ADA precision."""
     if isinstance(amount, float):
-        warn("as_ada() received amount of float type ({:f}). It is STRONGLY DISCOURAGED "
+        warn(
+            "as_ada() received amount of float type ({:f}). It is STRONGLY DISCOURAGED "
             "to use floating-point numbers for monetary operations due to rounding errors".format(
-                amount),
-            RuntimeWarning)
+                amount
+            ),
+            RuntimeWarning,
+        )
     return Decimal(amount).quantize(LOVELACE)
+
+
+BlockPosition = collections.namedtuple(
+    "BlockPosition", ["epoch", "slot", "absolute_slot"]
+)
