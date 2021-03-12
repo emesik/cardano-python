@@ -17,8 +17,8 @@ def get_block_position(data):
 def get_input(data):
     return Input(
         iid=data["id"],
-        address=Address(data["address"]),
-        amount=get_amount(data["amount"]),
+        address=Address(data["address"]) if "address" in data else None,
+        amount=get_amount(data["amount"]) if "amount" in data else None,
     )
 
 

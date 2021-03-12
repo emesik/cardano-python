@@ -112,8 +112,12 @@ class WalletREST(object):
             amount=serializers.get_amount(txd["amount"]),
             fee=serializers.get_amount(txd["fee"]),
             inserted_at=serializers.get_block_position(txd["inserted_at"]),
-            expires_at=serializers.get_block_position(txd["expires_at"]),
-            pending_since=serializers.get_block_position(txd["pending_since"]),
+            expires_at=serializers.get_block_position(txd["expires_at"])
+            if "expires_at" in txd
+            else None,
+            pending_since=serializers.get_block_position(txd["pending_since"])
+            if "pending_since" in txd
+            else None,
             inputs=[serializers.get_input(inp) for inp in txd["inputs"]],
             outputs=[serializers.get_output(outp) for outp in txd["outputs"]],
         )
