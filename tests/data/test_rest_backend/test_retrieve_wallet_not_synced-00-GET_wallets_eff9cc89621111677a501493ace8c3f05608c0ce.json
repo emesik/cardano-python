@@ -27,19 +27,23 @@
   "id": "eff9cc89621111677a501493ace8c3f05608c0ce",
   "name": "test wallet",
   "passphrase": {
-    "last_updated_at": "2021-03-13T21:04:08.768865954Z"
+    "last_updated_at": "2021-03-13T21:11:08.150523874Z"
   },
   "state": {
-    "status": "ready"
+    "progress": {
+      "quantity": 98.27,
+      "unit": "percent"
+    },
+    "status": "syncing"
   },
   "tip": {
-    "absolute_slot_number": 0,
-    "epoch_number": 0,
+    "absolute_slot_number": 20406847,
+    "epoch_number": 117,
     "height": {
-      "quantity": 0,
+      "quantity": 2372971,
       "unit": "block"
     },
-    "slot_number": 0,
-    "time": "2019-07-24T20:20:16Z"
+    "slot_number": 232447,
+    "time": "2021-03-03T12:54:23Z"
   }
 }

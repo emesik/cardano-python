@@ -32,6 +32,9 @@ class Wallet(object):
         if not self.backend.wallet_exists(wid):
             raise ValueError("Wallet of id '{:s}' doesn't exist.".format(wid))
 
+    def sync_progress(self):
+        return self.backend.sync_progress(self.wid)
+
     def addresses(self):
         return [Address(addr, wallet=self) for addr in self.backend.addresses(self.wid)]
 

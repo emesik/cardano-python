@@ -50,6 +50,22 @@ class TestREST(JSONTestCase):
         wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
         self.assertIsInstance(wallet, Wallet)
         self.assertEqual(wallet.wid, "eff9cc89621111677a501493ace8c3f05608c0ce")
+        self.assertAlmostEqual(wallet.sync_progress(), 1.0, places=2)
+
+    @responses.activate
+    def test_retrieve_wallet_not_synced(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_retrieve_wallet_not_synced-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        self.assertIsInstance(wallet, Wallet)
+        self.assertEqual(wallet.wid, "eff9cc89621111677a501493ace8c3f05608c0ce")
+        self.assertAlmostEqual(wallet.sync_progress(), 0.9827, places=4)
 
     @responses.activate
     def test_list_transactions(self):
