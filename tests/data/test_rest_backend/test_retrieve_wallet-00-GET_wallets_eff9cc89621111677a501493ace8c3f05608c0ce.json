@@ -27,7 +27,7 @@
   "id": "eff9cc89621111677a501493ace8c3f05608c0ce",
   "name": "test wallet",
   "passphrase": {
-    "last_updated_at": "2021-03-08T13:17:09.403390176Z"
+    "last_updated_at": "2021-03-13T21:04:08.768865954Z"
   },
   "state": {
     "progress": {
@@ -44,6 +44,6 @@
       "unit": "block"
     },
     "slot_number": 0,
-    "time": "2017-09-23T21:44:51Z"
+    "time": "2019-07-24T20:20:16Z"
   }
 }
