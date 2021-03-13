@@ -1,10 +1,9 @@
-from decimal import Decimal
-
 from .address import Address
 
 
 class Transaction(object):
     txid = None
+
     def __init__(self, txid, **kwargs):
         self.txid = txid
         self.amount = kwargs.pop("amount")

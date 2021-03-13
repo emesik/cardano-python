@@ -78,7 +78,11 @@ class WalletREST(object):
 
     def sync_progress(self, wid):
         wdata = self.raw_request("GET", "wallets/{:s}".format(wid))
-        return 1.0 if wdata["state"]["status"] == "ready" else wdata["state"]["progress"]["quantity"] / 100.0
+        return (
+            1.0
+            if wdata["state"]["status"] == "ready"
+            else wdata["state"]["progress"]["quantity"] / 100.0
+        )
 
     def balance(self, wid):
         bdata = self.raw_request("GET", "wallets/{:s}".format(wid))["balance"]
