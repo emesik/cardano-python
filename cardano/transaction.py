@@ -4,7 +4,9 @@ from .address import Address
 
 
 class Transaction(object):
-    def __init__(self, **kwargs):
+    txid = None
+    def __init__(self, txid, **kwargs):
+        self.txid = txid
         self.amount = kwargs.pop("amount")
         self.fee = kwargs.pop("fee")
         self.inputs = kwargs.pop("inputs")

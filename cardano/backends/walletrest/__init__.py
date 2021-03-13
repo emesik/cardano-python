@@ -109,6 +109,7 @@ class WalletREST(object):
 
     def _txdata2txargs(self, txd):
         return Transaction(
+            txid=txd["id"],
             amount=serializers.get_amount(txd["amount"]),
             fee=serializers.get_amount(txd["fee"]),
             inserted_at=serializers.get_block_position(txd["inserted_at"]),
