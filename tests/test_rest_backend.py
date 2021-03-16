@@ -9,6 +9,7 @@ from .base import JSONTestCase
 
 class TestREST(JSONTestCase):
     service = None
+    passphrase = "pass.12345678"
     data_subdir = "test_rest_backend"
 
     def setUp(self):
@@ -32,7 +33,7 @@ class TestREST(JSONTestCase):
         wid = self.service.create_wallet(
             name="test wallet",
             mnemonic="resist render west spin antique wild gossip thing syrup network risk gospel seek drop receive",
-            passphrase="pass.12345678",
+            passphrase=self.passphrase,
         )
         self.assertIsInstance(wid, str)
         self.assertEqual(wid, "eff9cc89621111677a501493ace8c3f05608c0ce")
@@ -89,3 +90,29 @@ class TestREST(JSONTestCase):
         txns = wallet.transactions()
         self.assertEqual(len(txns), 1)
         self.assertIsInstance(txns[0], Transaction)
+
+    @responses.activate
+    def test_transfer(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_transfer-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.POST,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/transactions"),
+            json=self._read(
+                "test_transfer-10-POST_transfer_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        txn = wallet.transfer(
+            "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+            1,
+            passphrase=self.passphrase,
+        )
+        self.assertIsInstance(txn, Transaction)

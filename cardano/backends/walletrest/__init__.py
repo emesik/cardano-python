@@ -43,8 +43,10 @@ class WalletREST(object):
         else:
             result = None
             _log.debug(u"No result (HTTP 204)")
+        if rsp.status_code == 400:
+            raise exceptions.BadRequest(result["message"], result=result)
         if rsp.status_code == 404:
-            raise exceptions.NotFound(result)
+            raise exceptions.NotFound(result["message"], result=result)
         return result
 
     def wallet_ids(self):
@@ -115,12 +117,14 @@ class WalletREST(object):
         adata = self.raw_request("GET", "wallets/{:s}/addresses".format(wid))
         return map(operator.itemgetter("id"), adata)
 
-    def _txdata2txargs(self, txd):
+    def _txdata2tx(self, txd):
         return Transaction(
             txid=txd["id"],
             amount=serializers.get_amount(txd["amount"]),
             fee=serializers.get_amount(txd["fee"]),
-            inserted_at=serializers.get_block_position(txd["inserted_at"]),
+            inserted_at=serializers.get_block_position(txd["inserted_at"])
+            if "inserted_at" in txd
+            else None,
             expires_at=serializers.get_block_position(txd["expires_at"])
             if "expires_at" in txd
             else None,
@@ -133,6 +137,23 @@ class WalletREST(object):
 
     def transactions(self, wid, start=None, end=None, order="ascending"):
         return [
-            self._txdata2txargs(txd)
+            self._txdata2tx(txd)
             for txd in self.raw_request("GET", "wallets/{:s}/transactions".format(wid))
         ]
+
+    def transfer(self, wid, destinations, ttl, passphrase):
+        data = {
+            "passphrase": passphrase,
+            "payments": [
+                {
+                    "address": str(address),
+                    "amount": serializers.store_amount(amount),
+                }
+                for (address, amount) in destinations
+            ],
+        }
+        if ttl is not None:
+            data["time_to_live"] = serializers.store_interval(ttl)
+        return self._txdata2tx(
+            self.raw_request("POST", "wallets/{:s}/transactions".format(wid), data)
+        )

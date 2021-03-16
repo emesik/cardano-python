@@ -1,11 +1,15 @@
 from ...address import Address
-from ...numbers import from_lovelaces, BlockPosition
+from ...numbers import from_lovelaces, to_lovelaces, BlockPosition
 from ...transaction import Input, Output
 
 
 def get_amount(data):
     assert data["unit"] == "lovelace"
     return from_lovelaces(data["quantity"])
+
+
+def store_amount(amount):
+    return {"quantity": to_lovelaces(amount), "unit": "lovelace"}
 
 
 def get_block_position(data):
@@ -24,3 +28,7 @@ def get_input(data):
 
 def get_output(data):
     return Output(address=Address(data["address"]), amount=get_amount(data["amount"]))
+
+
+def store_interval(seconds):
+    return {"quantity": int(seconds), "unit": "second"}
