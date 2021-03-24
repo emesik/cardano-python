@@ -30,24 +30,22 @@ Connect to the wallet
 ---------------------
 
 For brevity, the following example assumes thet you have an existing wallet of id
-``eff9cc89621111677a501493ace8c3f05608c0ce``. In the following chapter you'll learn how to create
-a new wallet from seed.
+``eff9cc89621111677a501493ace8c3f05608c0ce`` and the ``cardano-wallet`` is listening locally on
+port 8090. In the following chapter you'll also learn how to create a new wallet from seed.
 
 .. code-block:: python
 
-    In [1]: from cardano.wallet import WalletService
+    In [1]: from cardano.wallet import Wallet
 
     In [2]: from cardano.backends.walletrest import WalletREST
 
-    In [3]: w = WalletService(WalletREST(port=8090))
+    In [3]: wal = Wallet("eff9cc89621111677a501493ace8c3f05608c0ce", backend=WalletREST(port=8090))
 
-    In [4]: wal = ws.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+    In [4]: wal.sync_progress()
+    Out[4]: 1.0
 
-    In [5]: wal.sync_progress()
-    Out[5]: 1.0
-
-    In [6]: w.balance()
-    Out[6]: Balance(total=Decimal('998.831199'), available=Decimal('998.831199'), reward=Decimal('0.000000'))
+    In [5]: wal.balance()
+    Out[5]: Balance(total=Decimal('998.831199'), available=Decimal('998.831199'), reward=Decimal('0.000000'))
 
 Congratulations! You have connected to the wallet. You may now proceed to the
 next part, which will tell you about :doc:`interaction with wallet <wallet>`.

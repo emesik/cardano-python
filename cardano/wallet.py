@@ -5,6 +5,13 @@ from . import exceptions
 
 
 class WalletService(object):
+    """
+    Represents the service responsible for listing and retrieving the existing wallets or creating
+    new ones.
+
+    :param backend: the backend used to handle the underlying service layer
+
+    """
     def __init__(self, backend=None):
         self.backend = backend
 
@@ -26,6 +33,17 @@ Balance = collections.namedtuple("Balance", ["total", "available", "reward"])
 
 
 class Wallet(object):
+    """
+    Represents a single wallet. Allows for browsing the history, checking balance and spending
+    funds.
+
+    :param wid:         the wallet ID
+    :param backend:     the backend used to handle the underlying service layer
+    :param passphrase:  the passphrase protecting the wallet's spending functionality, not required
+                        for read-only operations. It will be stored for the entire lifetime of the
+                        object in ``.passphrase`` field. It might be also provided for each
+                        individual spend operation, then it will be discarded after use.
+    """
     passphrase = None
 
     def __init__(self, wid, backend, passphrase=None):
@@ -86,7 +104,8 @@ class Wallet(object):
         """
         Sends multiple transfers from the wallet. Returns the resulting transaction.
 
-        :param destinations: a list of destination and amount pairs: [(address, amount), ...]
+        :param destinations: a list of :class:`Address <cardano.address.Address>` and amount
+                    pairs: [(address, amount), ...]
         :param ttl: Time To Live in seconds. After TTL has lapsed the nodes give up on broadcasting
                     the transaction. Leave `None` to use the default value.
         :param passphrase: the passphrase to the wallet. It takes precedence over `self.passphrase`

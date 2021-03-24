@@ -10,6 +10,19 @@ This module is the implementation of `the idea`_ submitted to Catalyst Project.
 
 .. _`the idea`: https://cardano.ideascale.com/a/dtd/Python-module/333770-48088
 
+Prerequisites
+-------------
+
+1. You need to have a `cardano-node` running.
+2. You need to have a `cardano-wallet` running and connected to the node.
+3. The rest you find in the `documentation`_.
+
+Please note it is most safe to run both node and wallet software on your local machine. The network
+security is well beyond the scope of this documentation, though. Also, I strongly recommend using
+the Cardano *testnet* for any software development and testing.
+
+.. _`documentation`: http://cardano-python.readthedocs.io/en/latest/
+
 Roadmap
 -------
 
