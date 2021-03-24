@@ -9,10 +9,10 @@ class WalletService(object):
         self.backend = backend
 
     def wallets(self):
-        return [Wallet(self.backend, wid) for wid in self.backend.wallet_ids()]
+        return [Wallet(wid, backend=self.backend) for wid in self.backend.wallet_ids()]
 
     def wallet(self, wid, passphrase=None):
-        return Wallet(self.backend, wid, passphrase=passphrase)
+        return Wallet(wid, backend=self.backend, passphrase=passphrase)
 
     def create_wallet(self, name, mnemonic, passphrase, mnemonic_2f=None):
         """
@@ -28,9 +28,9 @@ Balance = collections.namedtuple("Balance", ["total", "available", "reward"])
 class Wallet(object):
     passphrase = None
 
-    def __init__(self, backend, wid, passphrase=None):
-        self.backend = backend
+    def __init__(self, wid, backend, passphrase=None):
         self.wid = wid
+        self.backend = backend
         self.passphrase = passphrase or self.passphrase
         if not self.backend.wallet_exists(wid):
             raise ValueError("Wallet of id '{:s}' doesn't exist.".format(wid))
