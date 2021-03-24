@@ -12,6 +12,7 @@ class WalletService(object):
     :param backend: the backend used to handle the underlying service layer
 
     """
+
     def __init__(self, backend=None):
         self.backend = backend
 
@@ -30,6 +31,10 @@ class WalletService(object):
 
 
 Balance = collections.namedtuple("Balance", ["total", "available", "reward"])
+Balance.__doc__ = "Represents a balance of asset, including total, principal and reward"
+Balance.total.__doc__ = "The total balance"
+Balance.available.__doc__ = "The principal, i.e. the total minus staking rewards"
+Balance.reward.__doc__ = "The staking rewards (interest)"
 
 
 class Wallet(object):
@@ -44,6 +49,7 @@ class Wallet(object):
                         object in ``.passphrase`` field. It might be also provided for each
                         individual spend operation, then it will be discarded after use.
     """
+
     passphrase = None
 
     def __init__(self, wid, backend, passphrase=None):

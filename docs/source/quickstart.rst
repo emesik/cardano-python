@@ -4,13 +4,16 @@ Quick start
 This quick start tutorial will guide you through the first steps of connecting
 to the Cardano wallet software. We assume:
 
- 1. You have installed and started ``cardano-node``,
- 2. The node has synchronized the blockchain,
- 3. You have installed and started ``cardano-wallet``,
- 4. The wallet software is connected to the node,
- 5. You know how to use CLI (*command line interface*),
+ 1. You have installed and started `cardano-node`_. (If there's no package for your OS, you may
+    consider installing a Docker image, however many of the tutorials out there are out of date.)
+ 2. The node has synchronized the blockchain.
+ 3. You have installed and started `cardano-wallet`_.
+ 4. The wallet software is connected to the node.
+ 5. You know how to use CLI (*command line interface*).
  6. You have some experience with Python.
 
+.. _`cardano-node`: https://github.com/input-output-hk/cardano-node
+.. _`cardano-wallet`: https://github.com/input-output-hk/cardano-wallet
 
 Use testnet for your own safety
 -------------------------------
@@ -48,4 +51,4 @@ port 8090. In the following chapter you'll also learn how to create a new wallet
     Out[5]: Balance(total=Decimal('998.831199'), available=Decimal('998.831199'), reward=Decimal('0.000000'))
 
 Congratulations! You have connected to the wallet. You may now proceed to the
-next part, which will tell you about :doc:`interaction with wallet <wallet>`.
+next section, which will tell you about :doc:`interaction with wallet <wallet>`.

@@ -1,7 +1,7 @@
 Working with wallets
 ====================
 
-The example presented in the :doc:`quickstart chapter <quickstart>` will certainly fail in your
+The example presented in the :doc:`quickstart section <quickstart>` will certainly fail in your
 environment, as you don't have the same wallet created yet. In order to set up a new wallet, you
 need to learn first about two kinds of objects:
 
@@ -16,6 +16,11 @@ need to learn first about two kinds of objects:
 3. Backend, which represents the underlying service layer. At the moment the only backend
    available is the REST API provided by ``cardano-wallet``, represented by the ``WalletREST``
    objects.
+
+.. note:: Remember that creating or deleting a wallet will not record any information on the
+    blockchain. If the wallet you're creating existed before, you'll be presented its' entire
+    history. Likweise, if you delete a wallet, you'll be able to create it again in this or any
+    other software and claim the funds or see historical transactions.
 
 Creating wallets
 ----------------
@@ -47,6 +52,20 @@ to obtain that wallet object, you'd have first to create it:
 Even though this wallet may contain some funds (on *testnet*), right after creation the balance
 will be null and the transaction history empty. This is because of ongoing sync process which scans
 the entire blockchain for transaction history.
+
+Balance tuple
+^^^^^^^^^^^^^
+
+The balance returned by ``wal.balance()`` (or methods that refer to native assets) is a subclass of
+``collections.namedtuple``. It consists of three elements:
+
+0. ``total`` — indicating the total amount of funds in the wallet, without going into too much
+    details.
+1. ``available`` — the amount of funds without staking rewards, might be also considered as the
+    principal paid to the wallet and used for staking.
+2. ``reward`` — the amount received as staking interest.
+
+Hence, to just get the full balance, you may use ``wal.balance().total``.
 
 Sync progress
 ^^^^^^^^^^^^^
@@ -90,6 +109,18 @@ In case your backend already knows about the wallet, you may use much simpler ap
     functionality will be added to the ``Wallet`` class and initialization without backend will be
     available.
 
+
+Removing wallets
+----------------
+
+This is a trivial operation:
+
+.. code-block:: python
+
+    In [6]: wal.delete()
+
+After that, if you try to use the wallet object again, the
+:doc:`cardano.backends.walletrest.exceptions.NotFound` exception will be raised.
 
 API reference
 -------------
