@@ -62,8 +62,15 @@ class Wallet(object):
     def sync_progress(self):
         return self.backend.sync_progress(self.wid)
 
-    def addresses(self):
-        return [Address(addr, wallet=self) for addr in self.backend.addresses(self.wid)]
+    def addresses(self, with_usage=False):
+        if with_usage:
+            return [
+                (Address(addr[0], wallet=self), addr[1])
+                for addr in self.backend.addresses(self.wid)
+            ]
+        return [
+            Address(addr[0], wallet=self) for addr in self.backend.addresses(self.wid)
+        ]
 
     def balance(self):
         return self.backend.balance(self.wid)

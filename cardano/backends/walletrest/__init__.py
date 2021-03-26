@@ -115,7 +115,7 @@ class WalletREST(object):
 
     def addresses(self, wid):
         adata = self.raw_request("GET", "wallets/{:s}/addresses".format(wid))
-        return map(operator.itemgetter("id"), adata)
+        return [(ad["id"], True if ad["state"] == "used" else False) for ad in adata]
 
     def _txdata2tx(self, txd):
         return Transaction(

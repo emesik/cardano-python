@@ -2,6 +2,13 @@ from .consts import Era
 
 
 class Address(object):
+    """
+    Represents Cardano address. Does no validation (TBD).
+    Compares with ``str`` and ``bytes`` objects.
+
+    :param addr:    the address as ``str`` or ``bytes`` or ``Address``
+    """
+
     _address = ""
     era = None
     wallet = None

@@ -1,8 +1,9 @@
 import responses
 
-from cardano.wallet import WalletService, Wallet
+from cardano.address import Address
 from cardano.backends.walletrest import WalletREST
 from cardano.transaction import Transaction
+from cardano.wallet import WalletService, Wallet
 
 from .base import JSONTestCase
 
@@ -67,6 +68,65 @@ class TestREST(JSONTestCase):
         self.assertIsInstance(wallet, Wallet)
         self.assertEqual(wallet.wid, "eff9cc89621111677a501493ace8c3f05608c0ce")
         self.assertAlmostEqual(wallet.sync_progress(), 0.9827, places=4)
+
+    @responses.activate
+    def test_list_addresses(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_list_addresses-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
+            json=self._read(
+                "test_list_addressess-10-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        addresses = wallet.addresses()
+        for i, addr in enumerate(addresses):
+            self.assertIsInstance(
+                addr,
+                Address,
+                "Address of index {:d} is not an instance of Address but {}".format(
+                    i, type(addr)
+                ),
+            )
+
+    @responses.activate
+    def test_list_addresses_with_usage(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_list_addresses_with_usage-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
+            json=self._read(
+                "test_list_addressess_with_usage-10-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        addresses = wallet.addresses(with_usage=True)
+        for i, addr in enumerate(addresses):
+            self.assertIsInstance(
+                addr[0],
+                Address,
+                "Address of index {:d} is not an instance of Address but {}".format(
+                    i, type(addr)
+                ),
+            )
+            self.assertIsInstance(addr[1], bool)
 
     @responses.activate
     def test_list_transactions(self):
