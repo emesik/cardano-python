@@ -2,6 +2,16 @@ from .address import Address
 
 
 class Transaction(object):
+    """
+    Represents a Cardano transaction.
+
+    :param txid:            the ID of the transaction
+    :param gross_amount:    gross amount, consisting of the amount of ADA paid and the fee
+    :param fee:             fee amount in ADA
+    :param inputs:          a sequence of :class:`Input` objects
+    :param outputs:         a sequence of :class:`Output` objects
+    :param direction:       either ``"incoming"`` or ``"outgoing"``
+    """
     txid = None
     gross_amount = None
     fee = None
@@ -37,10 +47,26 @@ class IOBase(object):
 
 
 class Input(IOBase):
+    """
+    Represents a :class:`Transaction` input.
+
+    :param address: the origin address
+    :type address:  :class:`cardano.address.Address`
+    :param amount:  the amount in ADA
+    :type amount:   :class:`Decimal`
+    """
     def __init__(self, iid=None, address=None, amount=None):
         super(Input, self).__init__(address=address, amount=amount)
         self.id = iid
 
 
 class Output(IOBase):
+    """
+    Represents a :class:`Transaction` output.
+
+    :param address: the destination address
+    :type address:  :class:`cardano.address.Address`
+    :param amount:  the amount in ADA
+    :type amount:   :class:`Decimal`
+    """
     pass
