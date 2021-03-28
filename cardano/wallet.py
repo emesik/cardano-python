@@ -1,4 +1,5 @@
 import collections
+from datetime import timezone
 
 from .address import Address
 from . import exceptions
@@ -81,8 +82,13 @@ class Wallet(object):
     def delete(self):
         return self.backend.delete_wallet(self.wid)
 
-    def transactions(self, start=None, end=None, order="ascending"):
-        return self.backend.transactions(self.wid, start=start, end=end, order=order)
+    def transactions(self): #, start=None, end=None, order="ascending"):
+        # WARNING: parameters don't really work; this is a known bug
+        #if start:
+        #    start = start.astimezone(tz=timezone.utc)
+        #if end:
+        #    end = end.astimezone(tz=timezone.utc)
+        return self.backend.transactions(self.wid) #, start=start, end=end, order=order)
 
     def _resolve_passphrase(self, passphrase):
         passphrase = passphrase or self.passphrase

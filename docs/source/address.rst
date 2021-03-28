@@ -45,8 +45,8 @@ has received some funds. Please note the returned structure will be now a list o
 
 .. code-block:: python
 
-    In [6]: wal.addresses(with_usage=True)
-    Out[6]: [(addr_test1qr9ujxmsvdya6r4e9lxlu4n37svn52us7z8uzqdkhw8muqld56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqzuzvzt, True),
+    In [7]: wal.addresses(with_usage=True)
+    Out[7]: [(addr_test1qr9ujxmsvdya6r4e9lxlu4n37svn52us7z8uzqdkhw8muqld56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqzuzvzt, True),
             (addr_test1qp64xq7fsz9kvjwjy5tzfpetp2jmmhhk68kw066wqvyfgvhd56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqj7msh0, True),
             (addr_test1qpjqfw0xn8wp3rt9633ja6ua2nfmpx70qdn67cutc93p02hd56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqvy6c2z, False),
             (addr_test1qqaaeru7xswhg9n9653ajpcryxl0334ryfp3kpuvd6aw0hhd56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqukuem0, False),
