@@ -65,3 +65,9 @@ In order to spend funds, you need to specify the destination address, amount (as
 
     In [22]: tx.amount
     Out[22]: Decimal('7.000000')
+
+API reference
+-------------
+
+.. automodule:: cardano.transaction
+   :members:

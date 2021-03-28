@@ -39,8 +39,8 @@ the voting dates. Right now the vote is still underway but I've started the work
 |            |         | - list historical transactions                                           |
 |            |         | - send transfer                                                          |
 +------------+---------+--------------------------------------------------------------------------+
-| 2021-03-28 | 0.2     | - listing native assets (other than ADA)                                 |
-|            |         | - create new payment addresses                                           |
+| 2021-03-28 | 0.2     | - fixed transaction API                                                  |
+|            |         | - listing native assets (other than ADA)                                 |
 |            |         | - docs for 0.1 features                                                  |
 +------------+---------+--------------------------------------------------------------------------+
 | 2021-04-06 | 0.3     | - add metadata to transactions                                           |
