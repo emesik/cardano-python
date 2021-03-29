@@ -24,6 +24,9 @@ Project homepage: https://github.com/emesik/cardano-python
    address
    transactions
 
+   simpletypes
+   exceptions
+
 
 Indices and tables
 ==================

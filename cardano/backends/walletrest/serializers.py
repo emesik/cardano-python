@@ -1,5 +1,6 @@
 from ...address import Address
-from ...numbers import from_lovelaces, to_lovelaces, BlockPosition
+from ...numbers import from_lovelaces, to_lovelaces
+from ...simpletypes import BlockPosition
 from ...transaction import Input, Output
 
 

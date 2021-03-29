@@ -83,7 +83,7 @@ class TestREST(JSONTestCase):
             responses.GET,
             self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
             json=self._read(
-                "test_list_addressess-10-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_list_addresses-10-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=200,
         )
@@ -112,7 +112,7 @@ class TestREST(JSONTestCase):
             responses.GET,
             self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
             json=self._read(
-                "test_list_addressess_with_usage-10-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_list_addresses_with_usage-10-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=200,
         )

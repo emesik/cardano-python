@@ -145,8 +145,10 @@ class WalletREST(object):
         if end is not None:
             data["end"] = end.isoformat(timespec="seconds")
         return [
-            self._txdata2tx(txd)
-            for txd in self.raw_request("GET", "wallets/{:s}/transactions".format(wid), data)
+            self._txdata2tx(txd, used_addresses=self.used_addresses(wid))
+            for txd in self.raw_request(
+                "GET", "wallets/{:s}/transactions".format(wid), data
+            )
         ]
 
     def transfer(self, wid, destinations, ttl, passphrase):

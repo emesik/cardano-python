@@ -69,5 +69,21 @@ In order to spend funds, you need to specify the destination address, amount (as
 API reference
 -------------
 
+Transactions
+^^^^^^^^^^^^
+
 .. automodule:: cardano.transaction
+   :members:
+
+Numbers
+^^^^^^^
+
+A submodule with helpers useful for unit conversion. The idea is to represent amounts in ADA as
+:class:`Decimal` type with 6 places of precision. For low-level backends, however, it's easier
+to use :class:`int` of Lovelaces.
+
+Also, :class:`float` arguments are accepted but will issue a :class:`RuntimeWarning` as it is a
+**very bad idea** to use floating-point numbers for monetary data.
+
+.. automodule:: cardano.numbers
    :members:

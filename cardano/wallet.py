@@ -1,7 +1,7 @@
-import collections
 from datetime import timezone
 
 from .address import Address
+from .simpletypes import Balance
 from . import exceptions
 
 
@@ -29,13 +29,6 @@ class WalletService(object):
         before being able to return full wallet data.
         """
         return self.backend.create_wallet(name, mnemonic, passphrase, mnemonic_2f)
-
-
-Balance = collections.namedtuple("Balance", ["total", "available", "reward"])
-Balance.__doc__ = "Represents a balance of asset, including total, principal and reward"
-Balance.total.__doc__ = "The total balance"
-Balance.available.__doc__ = "The principal, i.e. the total minus staking rewards"
-Balance.reward.__doc__ = "The staking rewards (interest)"
 
 
 class Wallet(object):
@@ -82,13 +75,15 @@ class Wallet(object):
     def delete(self):
         return self.backend.delete_wallet(self.wid)
 
-    def transactions(self): #, start=None, end=None, order="ascending"):
+    def transactions(self):  # , start=None, end=None, order="ascending"):
         # WARNING: parameters don't really work; this is a known bug
-        #if start:
+        # if start:
         #    start = start.astimezone(tz=timezone.utc)
-        #if end:
+        # if end:
         #    end = end.astimezone(tz=timezone.utc)
-        return self.backend.transactions(self.wid) #, start=start, end=end, order=order)
+        return self.backend.transactions(
+            self.wid
+        )  # , start=start, end=end, order=order)
 
     def _resolve_passphrase(self, passphrase):
         passphrase = passphrase or self.passphrase

@@ -12,6 +12,7 @@ class Transaction(object):
     :param outputs:         a sequence of :class:`Output` objects
     :param direction:       either ``"incoming"`` or ``"outgoing"``
     """
+
     txid = None
     gross_amount = None
     fee = None
@@ -25,11 +26,19 @@ class Transaction(object):
     def __init__(self, txid=None, **kwargs):
         self.txid = txid or self.txid
         gross_amount = kwargs.pop("gross_amount", None)
-        self.gross_amount = gross_amount if gross_amount is not None else self.gross_amount
+        self.gross_amount = (
+            gross_amount if gross_amount is not None else self.gross_amount
+        )
         fee = kwargs.pop("fee", None)
         self.fee = fee if fee is not None else self.fee
-        self.inputs = kwargs.pop("inputs", None) or self.inputs if self.inputs is not None else []
-        self.outputs = kwargs.pop("outputs", None) or self.outputs if self.outputs is not None else []
+        self.inputs = (
+            kwargs.pop("inputs", None) or self.inputs if self.inputs is not None else []
+        )
+        self.outputs = (
+            kwargs.pop("outputs", None) or self.outputs
+            if self.outputs is not None
+            else []
+        )
         self.direction = kwargs.pop("direction", None) or self.direction
         self.inserted_at = kwargs.pop("inserted_at", None) or self.inserted_at
         self.expires_at = kwargs.pop("expires_at", None) or self.expires_at
@@ -55,6 +64,7 @@ class Input(IOBase):
     :param amount:  the amount in ADA
     :type amount:   :class:`Decimal`
     """
+
     def __init__(self, iid=None, address=None, amount=None):
         super(Input, self).__init__(address=address, amount=amount)
         self.id = iid
@@ -69,4 +79,5 @@ class Output(IOBase):
     :param amount:  the amount in ADA
     :type amount:   :class:`Decimal`
     """
+
     pass
