@@ -35,3 +35,9 @@ class Address(object):
         elif isinstance(other, bytes):
             return str(self).encode() == other
         return super(Address, self).__eq__(other)
+
+    def __hash__(self):
+        return hash(str(self))
+
+    def __format__(self, spec):
+        return format(str(self), spec)
