@@ -22,6 +22,7 @@ class Transaction(object):
     inserted_at = None
     expires_at = None
     pending_since = None
+    local_address = None
 
     def __init__(self, txid=None, **kwargs):
         self.txid = txid or self.txid

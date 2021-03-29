@@ -117,7 +117,26 @@ class WalletREST(object):
         adata = self.raw_request("GET", "wallets/{:s}/addresses".format(wid))
         return [(ad["id"], True if ad["state"] == "used" else False) for ad in adata]
 
-    def _txdata2tx(self, txd):
+    def used_addresses(self, wid):
+        return set(
+            [ad[0] for ad in filter(operator.itemgetter(1), self.addresses(wid))]
+        )
+
+    def _txdata2tx(self, txd, used_addresses=None):
+        direction = txd["direction"]
+        inputs = [serializers.get_input(inp) for inp in txd["inputs"]]
+        outputs = [serializers.get_output(outp) for outp in txd["outputs"]]
+        local_inputs = set()
+        local_outputs = set()
+        if used_addresses:
+            if direction == "incoming":
+                for out in outputs:
+                    if out.address and out.address in used_addresses:
+                        local_outputs.add(out)
+            if direction == "outgoing":
+                for inp in inputs:
+                    if inp.address and inp.address in used_addresses:
+                        local_inputs.add(inp)
         return Transaction(
             txid=txd["id"],
             gross_amount=serializers.get_amount(txd["amount"]),
@@ -131,9 +150,9 @@ class WalletREST(object):
             pending_since=serializers.get_block_position(txd["pending_since"])
             if "pending_since" in txd
             else None,
-            inputs=[serializers.get_input(inp) for inp in txd["inputs"]],
-            outputs=[serializers.get_output(outp) for outp in txd["outputs"]],
-            direction=txd["direction"],
+            inputs=inputs,
+            outputs=outputs,
+            direction=direction,
         )
 
     def transactions(self, wid, start=None, end=None, order="ascending"):
@@ -164,6 +183,7 @@ class WalletREST(object):
         }
         if ttl is not None:
             data["time_to_live"] = serializers.store_interval(ttl)
-        return self._txdata2tx(
-            self.raw_request("POST", "wallets/{:s}/transactions".format(wid), data)
-        )
+        # NOTE: the order of the following two requests is important
+        txd = self.raw_request("POST", "wallets/{:s}/transactions".format(wid), data)
+        used_addresses = self.used_addresses(wid)
+        return self._txdata2tx(txd, used_addresses)
