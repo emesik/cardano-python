@@ -70,6 +70,28 @@ class TestREST(JSONTestCase):
         self.assertAlmostEqual(wallet.sync_progress(), 0.9827, places=4)
 
     @responses.activate
+    def test_retrieve_wallet_with_assets(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_retrieve_wallet_with_assets-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        self.assertIsInstance(wallet, Wallet)
+        self.assertEqual(wallet.wid, "eff9cc89621111677a501493ace8c3f05608c0ce")
+        assets = wallet.assets()
+        self.assertEqual(len(assets), 1)
+        self.assertEqual(
+            list(assets.keys())[0],
+            ":6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
+        )
+        self.assertEqual(list(assets.values())[0].available, 2)
+        self.assertEqual(list(assets.values())[0].total, 2)
+
+    @responses.activate
     def test_list_addresses(self):
         responses.add(
             responses.GET,
@@ -182,6 +204,42 @@ class TestREST(JSONTestCase):
         txns = wallet.transactions()
         self.assertEqual(len(txns), 1)
         self.assertIsInstance(txns[0], Transaction)
+
+    @responses.activate
+    def test_list_transactions_with_assets(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_list_transactions_with_assets-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/transactions"),
+            json=self._read(
+                "test_list_transactions_with_assets-10-GET_transactions_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
+            json=self._read(
+                "test_list_transactions_with_assets-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        txns = wallet.transactions()
+        self.assertEqual(len(txns), 4)
+        for tx in txns:
+            self.assertIsInstance(tx, Transaction)
+        self.assertEqual(txns[0].direction, "incoming")
+        self.assertEqual(txns[1].direction, "outgoing")
+        self.assertEqual(txns[2].direction, "outgoing")
+        self.assertEqual(txns[3].direction, "incoming")
 
     @responses.activate
     def test_transfer(self):

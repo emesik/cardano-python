@@ -4,6 +4,7 @@ import operator
 import requests
 
 from ...numbers import from_lovelaces
+from ...simpletypes import AssetID
 from ...transaction import Transaction
 from ...wallet import Balance
 from . import exceptions
@@ -102,15 +103,16 @@ class WalletREST(object):
             raise exceptions.NotSupported("Extra assets are not supported")
         assets = {}
         for ast in bdata["total"]:
-            pid = ast["policy_id"]
-            assets[pid] = assets[pid] if pid in assets else {}
-            assets[pid]["total"] = ast["quantity"]
+            aid = AssetID(ast["asset_name"], ast["policy_id"])
+            assets[aid] = assets[aid] if aid in assets else {}
+            assets[aid]["total"] = ast["quantity"]
         for ast in bdata["available"]:
-            pid = ast["policy_id"]
-            assets[pid] = assets[pid] if pid in assets else {}
-            assets[pid]["available"] = ast["quantity"]
+            aid = AssetID(ast["asset_name"], ast["policy_id"])
+            assets[aid] = assets[aid] if aid in assets else {}
+            assets[aid]["available"] = ast["quantity"]
         return {
-            pid: Balance(bal["total"], bal["available"], None) for pid, bal in assets
+            aid: Balance(bal["total"], bal["available"], None)
+            for aid, bal in assets.items()
         }
 
     def addresses(self, wid):
