@@ -27,7 +27,13 @@ Roadmap
 -------
 
 The roadmap is delayed from what I posted originally in the proposal. This is because I've mistaken
-the voting dates. Right now the vote is still underway but I've started the work already.
+the voting dates and during the work I also learned that some of the ideas aren't as easy as I
+thought them to be (surprise ;)
+
+I started the work even though the vote was still underway. As for today, it is confirmed the
+project would receive funding.
+
+The following timeline is still subject to reassessment, hopefully minimal.
 
 +------------+---------+--------------------------------------------------------------------------+
 | date       | version | features                                                                 |
@@ -43,16 +49,18 @@ the voting dates. Right now the vote is still underway but I've started the work
 |            |         | - listing native assets (other than ADA)                                 |
 |            |         | - docs for 0.1 features                                                  |
 +------------+---------+--------------------------------------------------------------------------+
-| 2021-04-06 | 0.3     | - add metadata to transactions                                           |
-|            |         | - fee estimation                                                         |
-|            |         | - stake                                                                  |
-|            |         | - unstake                                                                |
+| 2021-04-11 | 0.3     | - add metadata to transactions                                           |
 |            |         | - docs for 0.2 features                                                  |
 +------------+---------+--------------------------------------------------------------------------+
-| 2021-04-19 | 0.4     | - UTXO stats                                                             |
+| 2021-04-18 | 0.4     | - fee estimation                                                         |
+|            |         | - stake                                                                  |
+|            |         | - unstake                                                                |
+|            |         | - docs for 0.3 features                                                  |
++------------+---------+--------------------------------------------------------------------------+
+| 2021-04-30 | 0.5     | - UTXO stats                                                             |
 |            |         | - coin selection                                                         |
 |            |         | - address validation                                                     |
-|            |         | - docs for 0.3 + 0.4 features                                            |
+|            |         | - docs for 0.4 + 0.5 features                                            |
 +------------+---------+--------------------------------------------------------------------------+
 
 Also, there are optional features that aren't included in the Catalyst proposal.
