@@ -7,7 +7,7 @@ prefix is correct. It recognizes the following:
 * Shelley era ``addr1`` and ``addr_test1``
 * Byron era ``Ae2`` and ``DdzFF``
 
-Addresses are instances of :doc:`Address <cardano.address.Address>` class but you may use strings
+Addresses are instances of :class:`Address <cardano.address.Address>` class but you may use strings
 instead. Conversion and comparison methods are provided. No other functionality is available yet.
 
 Retrieving wallet addresses

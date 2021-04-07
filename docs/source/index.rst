@@ -26,6 +26,7 @@ Project homepage: https://github.com/emesik/cardano-python
 
    simpletypes
    exceptions
+   backends.walletrest
 
 
 Indices and tables
