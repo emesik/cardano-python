@@ -1,3 +1,4 @@
+from decimal import Decimal
 import json
 import logging
 import operator
@@ -12,6 +13,13 @@ from . import exceptions
 from . import serializers
 
 _log = logging.getLogger(__name__)
+
+
+class JSONWithDecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, Decimal):
+            return str(Decimal)
+        return super(JSONWithDecimalEncoder, self).default(o)
 
 
 class WalletREST(object):
@@ -39,8 +47,10 @@ class WalletREST(object):
             url, headers=hdr, data=json.dumps(params), timeout=self.timeout
         )
         if rsp.status_code != 204:  # if content exists
-            result = rsp.json()
-            _ppresult = json.dumps(result, indent=2, sort_keys=True)
+            result = rsp.json(parse_float=Decimal)
+            _ppresult = json.dumps(
+                result, cls=JSONWithDecimalEncoder, indent=2, sort_keys=True
+            )
             _log.debug(u"Result:\n{result}".format(result=_ppresult))
         else:
             result = None
@@ -85,7 +95,7 @@ class WalletREST(object):
         return (
             1.0
             if wdata["state"]["status"] == "ready"
-            else wdata["state"]["progress"]["quantity"] / 100.0
+            else wdata["state"]["progress"]["quantity"] / Decimal(100)
         )
 
     def balance(self, wid):
@@ -126,20 +136,30 @@ class WalletREST(object):
         )
 
     def _txdata2tx(self, txd, used_addresses=None):
-        direction = txd["direction"]
-        inputs = [serializers.get_input(inp) for inp in txd["inputs"]]
-        outputs = [serializers.get_output(outp) for outp in txd["outputs"]]
+        inputs = (
+            [serializers.get_input(inp) for inp in txd["inputs"]]
+            if "inputs" in txd
+            else []
+        )
+        outputs = (
+            [serializers.get_output(outp) for outp in txd["outputs"]]
+            if "outputs" in txd
+            else []
+        )
         local_inputs = set()
         local_outputs = set()
         if used_addresses:
-            if direction == "incoming":
-                for out in outputs:
-                    if out.address and out.address in used_addresses:
-                        local_outputs.add(out)
-            if direction == "outgoing":
-                for inp in inputs:
-                    if inp.address and inp.address in used_addresses:
-                        local_inputs.add(inp)
+            for out in outputs:
+                if out.address and out.address in used_addresses:
+                    local_outputs.add(out)
+            for inp in inputs:
+                if inp.address and inp.address in used_addresses:
+                    local_inputs.add(inp)
+        metadata = (
+            Metadata.deserialize(txd["metadata"])
+            if txd.get("metadata", None) is not None
+            else None
+        )
         return Transaction(
             txid=txd["id"],
             gross_amount=serializers.get_amount(txd["amount"]),
@@ -155,7 +175,7 @@ class WalletREST(object):
             else None,
             inputs=inputs,
             outputs=outputs,
-            direction=direction,
+            metadata=metadata,
         )
 
     def transactions(self, wid, start=None, end=None, order="ascending"):

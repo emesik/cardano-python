@@ -11,7 +11,6 @@ class Transaction(object):
     :param fee:             fee amount in ADA
     :param inputs:          a sequence of :class:`Input` objects
     :param outputs:         a sequence of :class:`Output` objects
-    :param direction:       either ``"incoming"`` or ``"outgoing"``
     :param metadata:        an instance of :class:`Metadata <cardano.metadata.Metadata>`
     """
 
@@ -20,7 +19,6 @@ class Transaction(object):
     fee = None
     inputs = None
     outputs = None
-    direction = None
     inserted_at = None
     expires_at = None
     pending_since = None
@@ -43,7 +41,6 @@ class Transaction(object):
             if self.outputs is not None
             else []
         )
-        self.direction = kwargs.pop("direction", None) or self.direction
         self.inserted_at = kwargs.pop("inserted_at", None) or self.inserted_at
         self.expires_at = kwargs.pop("expires_at", None) or self.expires_at
         self.pending_since = kwargs.pop("pending_since", None) or self.pending_since

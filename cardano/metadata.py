@@ -69,7 +69,7 @@ class Metadata(dict):
         elif isinstance(val, dict):
             return {
                 "map": [
-                    {"k": Metadata.serialize_value(v), "v": Metadata.serialize_value(v)}
+                    {"k": Metadata.serialize_value(k), "v": Metadata.serialize_value(v)}
                     for k, v in val.items()
                 ]
             }
