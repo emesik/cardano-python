@@ -117,7 +117,7 @@ class MetadataSerDeserTestCase(unittest.TestCase):
             2: bytearray([0xFE, 0xED, 0xBA, 0xDB, 0xEE, 0xF0]),
         }
         m = Metadata(data.items())
-        d = m.tx_dict()
+        d = m.serialize()
         self.assertEqual(len(d), 4)
         self.assertIn("1", d)
         self.assertIn("2", d)
@@ -136,7 +136,7 @@ class MetadataSerDeserTestCase(unittest.TestCase):
             2: bytearray([0xFE, 0xED, 0xBA, 0xDB, 0xEE, 0xF0]),
         }
         m = Metadata(data.items())
-        m2 = Metadata.deserialize(m.tx_dict())
+        m2 = Metadata.deserialize(m.serialize())
         self.assertDictEqual(data, m2)
 
     def test_serialize_list(self):
@@ -149,7 +149,7 @@ class MetadataSerDeserTestCase(unittest.TestCase):
             ]
         }
         m = Metadata(data.items())
-        d = m.tx_dict()
+        d = m.serialize()
         self.assertEqual(len(d), 1)
 
     def test_serialize_deserialize_list(self):
@@ -162,7 +162,7 @@ class MetadataSerDeserTestCase(unittest.TestCase):
             ]
         }
         m = Metadata(data.items())
-        m2 = Metadata.deserialize(m.tx_dict())
+        m2 = Metadata.deserialize(m.serialize())
         self.assertDictEqual(data, m2)
         self.assertEqual(data[997], m2[997])
 

@@ -1,4 +1,5 @@
 from .address import Address
+from .metadata import Metadata
 
 
 class Transaction(object):
@@ -11,6 +12,7 @@ class Transaction(object):
     :param inputs:          a sequence of :class:`Input` objects
     :param outputs:         a sequence of :class:`Output` objects
     :param direction:       either ``"incoming"`` or ``"outgoing"``
+    :param metadata:        an instance of :class:`Metadata <cardano.metadata.Metadata>`
     """
 
     txid = None
@@ -23,6 +25,7 @@ class Transaction(object):
     expires_at = None
     pending_since = None
     local_address = None
+    metadata = None
 
     def __init__(self, txid=None, **kwargs):
         self.txid = txid or self.txid
@@ -44,6 +47,11 @@ class Transaction(object):
         self.inserted_at = kwargs.pop("inserted_at", None) or self.inserted_at
         self.expires_at = kwargs.pop("expires_at", None) or self.expires_at
         self.pending_since = kwargs.pop("pending_since", None) or self.pending_since
+        self.metadata = (
+            kwargs.pop("metadata", Metadata()) or self.metadata
+            if self.metadata is not None
+            else Metadata()
+        )
 
     @property
     def amount(self):

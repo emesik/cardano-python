@@ -187,7 +187,7 @@ class WalletREST(object):
         if metadata is not None:
             if not isinstance(metadata, Metadata):
                 metadata = Metadata(metadata.items())
-            data["metadata"] = metadata.tx_dict()
+            data["metadata"] = metadata.serialize()
         if ttl is not None:
             data["time_to_live"] = serializers.store_interval(ttl)
         # NOTE: the order of the following two requests is important

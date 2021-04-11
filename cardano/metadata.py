@@ -132,5 +132,5 @@ class Metadata(dict):
             Metadata.validate_key(key), Metadata.validate_value(val)
         )
 
-    def tx_dict(self):
+    def serialize(self):
         return {str(k): Metadata.serialize_value(v) for k, v in self.items()}
