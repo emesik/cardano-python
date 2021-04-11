@@ -10,6 +10,7 @@ class Era(enum.IntEnum):
                 inserted as stepping stones into full Goguen. However, you may use comparison
                 operators between them, to check which was earlier or later than the other one.
     """
+
     BYRON = 1
     SHELLEY = 2
     ALLEGRA = 3

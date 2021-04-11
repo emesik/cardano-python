@@ -93,12 +93,14 @@ class Wallet(object):
             )
         return passphrase
 
-    def transfer(self, address, amount, ttl=None, passphrase=None):
+    def transfer(self, address, amount, metadata=None, ttl=None, passphrase=None):
         """
         Sends a transfer from the wallet. Returns the resulting transaction.
 
         :param address: destination :class:`Address <cardano.address.Address>` or subtype
         :param amount: amount to send
+        :param metadata: metadata to be sent, as :class:`Metadata <cardano.metadata.Metadata>`
+                    instance od ``dict`` mapping ``int`` keys to values of acceptable types
         :param ttl: Time To Live in seconds. After TTL has lapsed the nodes give up on broadcasting
                     the transaction. Leave `None` to use the default value.
         :param passphrase: the passphrase to the wallet. It takes precedence over `self.passphrase`
@@ -110,16 +112,21 @@ class Wallet(object):
         return self.backend.transfer(
             self.wid,
             ((address, amount),),
+            metadata=metadata,
             ttl=ttl,
             passphrase=self._resolve_passphrase(passphrase),
         )
 
-    def transfer_multiple(self, destinations, amount, ttl=None, passphrase=None):
+    def transfer_multiple(
+        self, destinations, amount, metadata=None, ttl=None, passphrase=None
+    ):
         """
         Sends multiple transfers from the wallet. Returns the resulting transaction.
 
         :param destinations: a list of :class:`Address <cardano.address.Address>` and amount
-                    pairs: [(address, amount), ...]
+                    pairs ``[(address, amount), ...]``
+        :param metadata: metadata to be sent, as :class:`Metadata <cardano.metadata.Metadata>`
+                    instance od ``dict`` mapping ``int`` keys to values of acceptable types
         :param ttl: Time To Live in seconds. After TTL has lapsed the nodes give up on broadcasting
                     the transaction. Leave `None` to use the default value.
         :param passphrase: the passphrase to the wallet. It takes precedence over `self.passphrase`
@@ -136,6 +143,7 @@ class Wallet(object):
         return self.backend.transfer(
             self.wid,
             destinations,
+            metadata=metadata,
             ttl=ttl,
             passphrase=self._resolve_passphrase(passphrase),
         )

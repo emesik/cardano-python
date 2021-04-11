@@ -87,3 +87,12 @@ Also, :class:`float` arguments are accepted but will issue a :class:`RuntimeWarn
 
 .. automodule:: cardano.numbers
    :members:
+
+Metadata
+^^^^^^^^
+
+A class representing Cardano transaction metadata. Inherits from ``dict`` and offers both 
+validation and serialization of the data.
+
+.. automodule:: cardano.metadata
+   :members:

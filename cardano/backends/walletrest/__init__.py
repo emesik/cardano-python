@@ -3,6 +3,7 @@ import logging
 import operator
 import requests
 
+from ...metadata import Metadata
 from ...numbers import from_lovelaces
 from ...simpletypes import AssetID
 from ...transaction import Transaction
@@ -172,7 +173,7 @@ class WalletREST(object):
             )
         ]
 
-    def transfer(self, wid, destinations, ttl, passphrase):
+    def transfer(self, wid, destinations, metadata, ttl, passphrase):
         data = {
             "passphrase": passphrase,
             "payments": [
@@ -183,6 +184,10 @@ class WalletREST(object):
                 for (address, amount) in destinations
             ],
         }
+        if metadata is not None:
+            if not isinstance(metadata, Metadata):
+                metadata = Metadata(metadata.items())
+            data["metadata"] = metadata.tx_dict()
         if ttl is not None:
             data["time_to_live"] = serializers.store_interval(ttl)
         # NOTE: the order of the following two requests is important
