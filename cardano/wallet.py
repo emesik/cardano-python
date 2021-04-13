@@ -1,7 +1,4 @@
-from datetime import timezone
-
 from .address import Address
-from .simpletypes import Balance
 from . import exceptions
 
 
@@ -112,9 +109,9 @@ class Wallet(object):
         return self.backend.transfer(
             self.wid,
             ((address, amount),),
-            metadata=metadata,
-            ttl=ttl,
-            passphrase=self._resolve_passphrase(passphrase),
+            metadata,
+            ttl,
+            self._resolve_passphrase(passphrase),
         )
 
     def transfer_multiple(
@@ -135,15 +132,10 @@ class Wallet(object):
                     exception will be raised.
         :rtype: :class:`Transaction <cardano.transaction.Transaction>`
         """
-        passphrase = passphrase or self.passphrase
-        if passphrase is None:
-            raise exceptions.MissingPassphrase(
-                "Cannot transfer from wallet without the passphrase"
-            )
         return self.backend.transfer(
             self.wid,
             destinations,
-            metadata=metadata,
-            ttl=ttl,
-            passphrase=self._resolve_passphrase(passphrase),
+            metadata,
+            ttl,
+            self._resolve_passphrase(passphrase),
         )

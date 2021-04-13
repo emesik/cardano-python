@@ -6,9 +6,8 @@ import requests
 
 from ...metadata import Metadata
 from ...numbers import from_lovelaces
-from ...simpletypes import AssetID
+from ...simpletypes import AssetID, Balance
 from ...transaction import Transaction
-from ...wallet import Balance
 from . import exceptions
 from . import serializers
 
