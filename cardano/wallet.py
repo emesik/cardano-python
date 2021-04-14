@@ -114,9 +114,7 @@ class Wallet(object):
             self._resolve_passphrase(passphrase),
         )
 
-    def transfer_multiple(
-        self, destinations, amount, metadata=None, ttl=None, passphrase=None
-    ):
+    def transfer_multiple(self, destinations, metadata=None, ttl=None, passphrase=None):
         """
         Sends multiple transfers from the wallet. Returns the resulting transaction.
 

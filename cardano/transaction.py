@@ -33,13 +33,11 @@ class Transaction(object):
         )
         fee = kwargs.pop("fee", None)
         self.fee = fee if fee is not None else self.fee
-        self.inputs = (
-            kwargs.pop("inputs", None) or self.inputs if self.inputs is not None else []
+        self.inputs = kwargs.pop("inputs", []) or (
+            self.inputs if self.inputs is not None else []
         )
-        self.outputs = (
-            kwargs.pop("outputs", None) or self.outputs
-            if self.outputs is not None
-            else []
+        self.outputs = kwargs.pop("outputs", []) or (
+            self.outputs if self.outputs is not None else []
         )
         self.inserted_at = kwargs.pop("inserted_at", None) or self.inserted_at
         self.expires_at = kwargs.pop("expires_at", None) or self.expires_at

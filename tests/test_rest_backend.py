@@ -275,6 +275,50 @@ class TestREST(JSONTestCase):
         self.assertIsInstance(txn, Transaction)
 
     @responses.activate
+    def test_transfer_multiple(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_transfer_multiple-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.POST,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/transactions"),
+            json=self._read(
+                "test_transfer_multiple-10-POST_transfer_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
+            json=self._read(
+                "test_transfer_multiple-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        txn = wallet.transfer_multiple(
+            (
+                (
+                    "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+                    Decimal("1.234567"),
+                ),
+                (
+                    "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
+                    Decimal("2.345678"),
+                ),
+            ),
+            passphrase=self.passphrase,
+        )
+        self.assertIsInstance(txn, Transaction)
+        self.assertEqual(len(txn.inputs), 1)
+        self.assertEqual(len(txn.outputs), 4)
+
+    @responses.activate
     def test_transfer_with_metadata(self):
         responses.add(
             responses.GET,
