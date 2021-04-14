@@ -137,3 +137,16 @@ class Wallet(object):
             ttl,
             self._resolve_passphrase(passphrase),
         )
+
+    def estimate_fee(self, destinations, metadata=None):
+        """
+        Estimates the fee for a potential transaction to specified destinations and carrying
+        optional metadata. Returns a tuple of estimated minimum and maximum fee, in ADA.
+
+        :param destinations: a list of :class:`Address <cardano.address.Address>` and amount
+                    pairs ``[(address, amount), ...]``
+        :param metadata: metadata to be sent, as :class:`Metadata <cardano.metadata.Metadata>`
+                    instance od ``dict`` mapping ``int`` keys to values of acceptable types
+        :rtype: (``Decimal``, ``Decimal``)
+        """
+        return self.backend.estimate_fee(self.wid, destinations, metadata)

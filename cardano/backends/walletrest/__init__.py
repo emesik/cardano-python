@@ -213,3 +213,25 @@ class WalletREST(object):
         txd = self.raw_request("POST", "wallets/{:s}/transactions".format(wid), data)
         used_addresses = self.used_addresses(wid)
         return self._txdata2tx(txd, used_addresses)
+
+    def estimate_fee(self, wid, destinations, metadata):
+        data = {
+            "payments": [
+                {
+                    "address": str(address),
+                    "amount": serializers.store_amount(amount),
+                }
+                for (address, amount) in destinations
+            ],
+        }
+        if metadata is not None:
+            if not isinstance(metadata, Metadata):
+                metadata = Metadata(metadata.items())
+            data["metadata"] = metadata.serialize()
+        feedata = self.raw_request(
+            "POST", "wallets/{:s}/payment-fees".format(wid), data
+        )
+        return (
+            serializers.get_amount(feedata["estimated_min"]),
+            serializers.get_amount(feedata["estimated_max"]),
+        )
