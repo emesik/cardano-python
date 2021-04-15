@@ -1,0 +1,24 @@
+{
+  "deposit": {
+    "quantity": 0,
+    "unit": "lovelace"
+  },
+  "estimated_max": {
+    "quantity": 180989,
+    "unit": "lovelace"
+  },
+  "estimated_min": {
+    "quantity": 174785,
+    "unit": "lovelace"
+  },
+  "minimum_coins": [
+    {
+      "quantity": 1000000,
+      "unit": "lovelace"
+    },
+    {
+      "quantity": 1000000,
+      "unit": "lovelace"
+    }
+  ]
+}

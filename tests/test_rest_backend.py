@@ -391,3 +391,99 @@ class TestREST(JSONTestCase):
         )
         self.assertIsInstance(txn, Transaction)
         self.assertIsInstance(txn.metadata, Metadata)
+
+    @responses.activate
+    def test_estimate_fee(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_estimate_fee-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.POST,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/payment-fees"),
+            json=self._read(
+                "test_estimate_fee-10-POST_estimate_fee_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.POST,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/payment-fees"),
+            json=self._read(
+                "test_estimate_fee-20-POST_estimate_fee_with_metadata_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        est_min, est_max = wallet.estimate_fee(
+            (
+                (
+                    "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+                    Decimal("1.234567"),
+                ),
+                (
+                    "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
+                    Decimal("2.345678"),
+                ),
+            )
+        )
+        self.assertEqual(est_min, Decimal("0.174785"))
+        self.assertEqual(est_max, Decimal("0.180989"))
+        data = json.loads(
+            """
+        {
+            "10504143639544897702": {
+                "int": -1.4304053759886015514e19
+            },
+            "17329656595257689515": {
+                "string": "yQNttsok3EQ"
+            },
+            "15345559452353729335": {
+                "bytes": "fa1212030dd02612eccb"
+            },
+            "593828266493176337": {
+                "list": [
+                    {
+                        "string": "HaYsLNx7"
+                    },
+                    {
+                        "int": -1.537136810304170744e19
+                    }
+                ]
+            },
+            "17200655244803120463": {
+                "map": [
+                    {
+                        "k": {
+                            "string": "zNXD7qk"
+                        },
+                        "v": {
+                            "list": []
+                        }
+                    }
+                ]
+            }
+        }
+        """,
+            parse_float=Decimal,
+        )
+        metadata = Metadata.deserialize(data)
+        est_min, est_max = wallet.estimate_fee(
+            (
+                (
+                    "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+                    Decimal("1.234567"),
+                ),
+                (
+                    "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
+                    Decimal("2.345678"),
+                ),
+            ),
+            metadata=metadata,
+        )
+        self.assertEqual(est_min, Decimal("0.180989"))
+        self.assertEqual(est_max, Decimal("0.187193"))
