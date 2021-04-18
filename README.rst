@@ -53,14 +53,15 @@ The following timeline is still subject to reassessment, hopefully minimal.
 |            |         | - docs for 0.2 features                                                  |
 +------------+---------+--------------------------------------------------------------------------+
 | 2021-04-18 | 0.4     | - fee estimation                                                         |
-|            |         | - stake                                                                  |
-|            |         | - unstake                                                                |
-|            |         | - docs for 0.3 features                                                  |
 +------------+---------+--------------------------------------------------------------------------+
-| 2021-04-30 | 0.5     | - UTXO stats                                                             |
+| 2021-04-25 | 0.5     | - stake                                                                  |
+|            |         | - unstake                                                                |
+|            |         | - docs for 0.4 features                                                  |
++------------+---------+--------------------------------------------------------------------------+
+| 2021-05-04 | 0.6     | - UTXO stats                                                             |
 |            |         | - coin selection                                                         |
 |            |         | - address validation                                                     |
-|            |         | - docs for 0.4 + 0.5 features                                            |
+|            |         | - docs for 0.5 + 0.6 features                                            |
 +------------+---------+--------------------------------------------------------------------------+
 
 Also, there are optional features that aren't included in the Catalyst proposal.

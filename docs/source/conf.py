@@ -22,7 +22,7 @@ copyright = '2021, Michał Sałaban'
 author = 'Michał Sałaban'
 
 # The full version, including alpha/beta/rc tags
-release = '0.3.1'
+release = '0.4'
 
 
 # -- General configuration ---------------------------------------------------
