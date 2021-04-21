@@ -43,9 +43,9 @@ class Transaction(object):
         self.expires_at = kwargs.pop("expires_at", None) or self.expires_at
         self.pending_since = kwargs.pop("pending_since", None) or self.pending_since
         self.metadata = (
-            kwargs.pop("metadata", Metadata()) or self.metadata
+            kwargs.pop("metadata", Metadata()) or (self.metadata
             if self.metadata is not None
-            else Metadata()
+            else Metadata())
         )
 
     @property

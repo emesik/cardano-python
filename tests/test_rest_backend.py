@@ -391,6 +391,7 @@ class TestREST(JSONTestCase):
         )
         self.assertIsInstance(txn, Transaction)
         self.assertIsInstance(txn.metadata, Metadata)
+        self.assertDictEqual(txn.metadata, Metadata.deserialize(data))
 
     @responses.activate
     def test_estimate_fee(self):
