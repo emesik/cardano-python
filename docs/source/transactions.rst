@@ -66,6 +66,45 @@ In order to spend funds, you need to specify the destination address, amount (as
     In [22]: tx.amount
     Out[22]: Decimal('7.000000')
 
+Metadata
+--------
+
+Since the Shelley era, Cardano allows for adding metadata to transactions. Metadata is a mapping where
+keys are integers and values belong to a short list of supported data types. Description of the
+structure is beyond the scope of this documentation, however you may read this `description`_ or
+`another one`_ which includes a good test example.
+
+.. warning:: While Cardano supports ``map`` objects that use another ``map`` or ``list`` as key
+        element, this feature is **not yet supported by the Python module**. The reason is that
+        data on blockchain is immutable (cannot be modified) while the corresponding Python objects
+        (``dict`` and ``list``) are mutable, which disqualifies them as ``dict`` keys.
+
+        This is a topic for `issue #5`_ and will be resolved once a good solution has been figured
+        out.
+
+.. _`description`: https://github.com/input-output-hk/cardano-wallet/wiki/TxMetadata
+.. _`another one`: https://github.com/input-output-hk/cardano-node/blob/master/doc/reference/tx-metadata.md
+.. _`issue #5`: https://github.com/emesik/cardano-python/issues/5
+
+Storing and retrieving metadata
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Metadata can be passed to ``Wallet.transfer()`` and ``Wallet.transfer_multiple()`` methods as
+:class:`dict` or :class:`Metadata` instance. It will be instantly available in the ``.metadata``
+attribute of the resulting :class:`Transaction` object.
+
+.. code-block:: python
+
+    In [23]: tx = wal.transfer(
+        "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+        7,
+        metadata={1: "first value", 23: "next value"},
+        passphrase="xxx")
+
+    In [18]: tx.metadata
+    Out[18]: {1: 'first value', 23: 'next value'}
+
+
 API reference
 -------------
 

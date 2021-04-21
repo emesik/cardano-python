@@ -6,6 +6,12 @@ _MAXINT = 2 ** 64 - 1
 
 
 class Metadata(dict):
+    """
+    Represents Cardano transaction metadata. Inherits from :class:`dict` but passes all keys
+    and values through validity check.
+
+    :param mapping:         a sequence of (key, value) pairs
+    """
     TYPE_RESOLVERS = {
         "string": lambda s: s,
         "int": lambda i: Metadata.deserialize_int(i),
@@ -22,6 +28,11 @@ class Metadata(dict):
 
     @staticmethod
     def validate_key(key):
+        """
+        Checks if the key is allowed, i.e. is an :class:`int` and within the allowed range.
+
+        Raises :class:`KeyError` otherwise.
+        """
         if not isinstance(key, int):
             raise KeyError("Metadata keys must be integers")
         if key < 0:
@@ -32,6 +43,13 @@ class Metadata(dict):
 
     @staticmethod
     def validate_value(val):
+        """
+        Checks if the value is allowed, i.e. is one of :class:`int`, :class:`str`, :class:`bytes`,
+        :class:`bytearray`, :class:`list` or :class:`dict`.
+
+        Raises :class:`TypeError` otherwise. Also raises :class:`ValueError` if the value is of
+        proper type but exceeds range limit for Cardano metadata.
+        """
         if isinstance(val, (str, bytes, bytearray)):
             if len(val) > 64:
                 raise ValueError(
@@ -58,6 +76,12 @@ class Metadata(dict):
 
     @staticmethod
     def serialize_value(val):
+        """
+        Serializes Python value to an object that can be passed to transaction as a metadata value.
+        The returned object is a mapping which contains both the type name and the value.
+
+        Raises :class:`RuntimeError` when a value of unrecognized type has been passed.
+        """
         if isinstance(val, int):
             return {"int": val}
         elif isinstance(val, str):
@@ -77,6 +101,12 @@ class Metadata(dict):
         raise RuntimeError(
             "Found unserializable value of {} (type {})".format(val, str(type(val)))
         )
+
+    def serialize(self):
+        """
+        Returns serialized form of the metadata, which can be passed to the transaction.
+        """
+        return {str(k): Metadata.serialize_value(v) for k, v in self.items()}
 
     @staticmethod
     def deserialize_item(key, vdata):
@@ -112,7 +142,8 @@ class Metadata(dict):
     @staticmethod
     def deserialize(txdata):
         """
-        Deserializes transaction metadata ``dict`` and returns :class:``Metadata`` instance.
+        Deserializes transaction metadata :class:`dict` and returns :class:`Metadata` instance.
+
         :param txdata:  the transaction data
         """
         data = {}
@@ -131,6 +162,3 @@ class Metadata(dict):
         return super(Metadata, self).__setitem__(
             Metadata.validate_key(key), Metadata.validate_value(val)
         )
-
-    def serialize(self):
-        return {str(k): Metadata.serialize_value(v) for k, v in self.items()}
