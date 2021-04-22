@@ -4,7 +4,7 @@ Python Cardano module
 **This software is in early development phase. Please consider it experimental and don't rely on any
 API to be stable in the future.**
 
-There's release 0.4.1 available for those brave enough to try it.
+There's release 0.4.2 available for those brave enough to try it.
 
 This module is the implementation of `the idea`_ submitted to Catalyst Project.
 
