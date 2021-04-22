@@ -295,6 +295,7 @@ class TestREST(JSONTestCase):
         self.assertEqual(len(txn.outputs), 4)
         self.assertEqual(len(txn.local_inputs), 1)
         self.assertEqual(len(txn.local_outputs), 3)
+        self.assertEqual(txn.amount_in, Decimal("0"))
         self.assertEqual(txn.amount_out, Decimal("1.234567"))
 
     @responses.activate

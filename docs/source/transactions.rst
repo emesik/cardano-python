@@ -45,17 +45,73 @@ In order to spend funds, you need to specify the destination address, amount (as
     In [18]: tx.txid
     Out[18]: 'a7a16a0653a6a397eb822ff8a3f610b5dabc82c5da2425fcc267f983f0edec88'
 
-    In [19]: tx.direction
-    Out[19]: 'outgoing'
+    In [19]: tx.amount_in
+    Out[19]: Decimal('0.000000')
 
-    In [20]: tx.gross_amount
-    Out[20]: Decimal('7.168801')
+    In [20]: tx.amount_out
+    Out[20]: Decimal('7.000000')
 
     In [21]: tx.fee
     Out[21]: Decimal('0.168801')
 
-    In [22]: tx.amount
-    Out[22]: Decimal('7.000000')
+Another useful function is ``Wallet.transfer_multiple`` which accepts more than one destination for
+a single transaction. It is useful for aggregating payouts and reducing fee costs. The difference
+from the previous method is that it accepts a sequence of ``(address, amount)`` pairs.
+
+.. code-block:: python
+
+    In [23]: tx = wallet.transfer_multiple(
+            (
+                (
+                    "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+                    Decimal("1.234567"),
+                ),
+                (
+                    "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
+                    Decimal("2.345678"),
+                ),
+            ),
+            passphrase="xxx",
+        )
+
+    In [24]: tx.txid
+    Out[24]: 'a7a16a0653a6a397eb822ff8a3f610b5dabc82c5da2425fcc267f983f0edec88'
+
+    In [25]: tx.amount_in
+    Out[25]: Decimal('0.000000')
+
+    In [26]: tx.amount_out
+    Out[26]: Decimal('3.580245')
+
+    In [27]: tx.fee
+    Out[27]: Decimal('0.168801')
+
+Of course the list of destinations can have a single element. In fact, the ``transfer()`` method is
+just a shortcut for ``transfer_multiple()`` to make single payments easier.
+
+Estimating fees
+~~~~~~~~~~~~~~~
+
+The :class:`Wallet` object also offers method which estimates fee for transaction. The signature
+is similar to ``transfer_multiple()``. It accepts a list of payments to be made and optionally the
+metadata, and returns a tuple of estimated minimum and maximum fee for the eventual transaction.
+
+.. code-block:: python
+
+    In [23]: f = wal.estimate_fee(
+            (
+                ("addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+                Decimal("1.234567")),
+                ("addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
+                Decimal("2.345678")),
+            ))
+
+    In [24]: f
+    Out[24]: (Decimal('0.174785'), Decimal('0.180989'))
+
+
+.. note:: Don't forget to include metadata when estimating fees. They are based on the transaction
+        size and additional data changes that significantly.
 
 Metadata
 --------
