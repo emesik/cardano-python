@@ -171,6 +171,10 @@ class Metadata(dict):
 
 
 class ImmutableDict(dict):
+    """
+    A flavor of ``dict`` with all mutating methods blocked and hash generation added.
+    It can be used as mapping keys.
+    """
     def __hash__(self):
         return hash("|".join(["{}={}".format(*i) for i in sorted(self.items(),
                     key=operator.itemgetter(0))]))

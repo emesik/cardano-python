@@ -121,17 +121,22 @@ keys are integers and values belong to a short list of supported data types. Des
 structure is beyond the scope of this documentation, however you may read this `description`_ or
 `another one`_ which includes a good test example.
 
-.. warning:: While Cardano supports ``map`` objects that use another ``map`` or ``list`` as key
-        element, this feature is **not yet supported by the Python module**. The reason is that
-        data on blockchain is immutable (cannot be modified) while the corresponding Python objects
-        (``dict`` and ``list``) are mutable, which disqualifies them as ``dict`` keys.
+Lists and dicts as map keys
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        This is a topic for `issue #5`_ and will be resolved once a good solution has been figured
-        out.
+While Cardano supports ``map`` objects that use another ``map`` or ``list`` as key element, this
+feature cannot be supported by the Python module directly. The reason is that data on blockchain is
+immutable (cannot be modified) while the corresponding Python objects (``dict`` and ``list``) are
+mutable, which disqualifies them as ``dict`` keys due to unstable hash value.
+
+For that reason, substitutions have been introduced when following types of variables are used as
+keys:
+
+    * ``list``: the key on Python side is ``tuple``,
+    * ``dict``: will be converted to :class:`ImmutableDict`
 
 .. _`description`: https://github.com/input-output-hk/cardano-wallet/wiki/TxMetadata
 .. _`another one`: https://github.com/input-output-hk/cardano-node/blob/master/doc/reference/tx-metadata.md
-.. _`issue #5`: https://github.com/emesik/cardano-python/issues/5
 
 Storing and retrieving metadata
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
