@@ -2,7 +2,7 @@ from decimal import Decimal
 import json
 import unittest
 
-from cardano.metadata import Metadata
+from cardano.metadata import Metadata, ImmutableDict
 
 
 class MetadataValidationTestCase(unittest.TestCase):
@@ -201,6 +201,14 @@ class MetadataSerDeserTestCase(unittest.TestCase):
                 "map": [
                     {
                         "k": {
+                            "map": []
+                        },
+                        "v": {
+                            "string": "G"
+                        }
+                    },
+                    {
+                        "k": {
                             "string": "zNXD7qk"
                         },
                         "v": {
@@ -229,4 +237,4 @@ class MetadataSerDeserTestCase(unittest.TestCase):
         self.assertIsInstance(m[593828266493176337][1], int)
         self.assertEqual(m[593828266493176337], ["HaYsLNx7", -15371368103041707440])
         self.assertIsInstance(m[17200655244803120463], dict)
-        self.assertDictEqual(m[17200655244803120463], {"zNXD7qk": []})
+        self.assertDictEqual(m[17200655244803120463], {ImmutableDict(): "G", "zNXD7qk": []})

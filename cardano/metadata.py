@@ -12,6 +12,7 @@ class Metadata(dict):
 
     :param mapping:         a sequence of (key, value) pairs
     """
+
     TYPE_RESOLVERS = {
         "string": lambda s: s,
         "int": lambda i: Metadata.deserialize_int(i),
@@ -60,7 +61,7 @@ class Metadata(dict):
                 raise ValueError("Int {:d} is less than -2^64-1".format(val))
             elif val > _MAXINT:
                 raise ValueError("Int {:d} is over 2^64-1".format(val))
-        elif isinstance(val, list):
+        elif isinstance(val, (list, tuple)):
             pass
         elif isinstance(val, dict):
             for k, v in val.items():
@@ -134,7 +135,12 @@ class Metadata(dict):
         for m in themap:
             ktype, kval = list(m["k"].items()).pop()
             vtype, vval = list(m["v"].items()).pop()
-            data[Metadata.TYPE_RESOLVERS[ktype](kval)] = Metadata.TYPE_RESOLVERS[vtype](
+            key = Metadata.TYPE_RESOLVERS[ktype](kval)
+            if isinstance(key, list):
+                key = tuple(key)
+            elif isinstance(key, dict):
+                key = ImmutableDict(key)
+            data[key] = Metadata.TYPE_RESOLVERS[vtype](
                 vval
             )
         return data
@@ -162,3 +168,27 @@ class Metadata(dict):
         return super(Metadata, self).__setitem__(
             Metadata.validate_key(key), Metadata.validate_value(val)
         )
+
+
+class ImmutableDict(dict):
+    def __hash__(self):
+        return hash("|".join(["{}={}".format(*i) for i in sorted(self.items(),
+                    key=operator.itemgetter(0))]))
+
+    def __setitem__(self, key, value):
+        raise RuntimeError("ImmutableDict doesn't allow changes")
+
+    def __delitem__(self, key):
+        raise RuntimeError("ImmutableDict doesn't allow changes")
+
+    def clear(self):
+        raise RuntimeError("ImmutableDict doesn't allow changes")
+
+    def pop(self, key):
+        raise RuntimeError("ImmutableDict doesn't allow changes")
+
+    def popitem(self):
+        raise RuntimeError("ImmutableDict doesn't allow changes")
+
+    def update(self, *args, **kwargs):
+        raise RuntimeError("ImmutableDict doesn't allow changes")
