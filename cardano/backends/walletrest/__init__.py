@@ -129,12 +129,10 @@ class WalletREST(object):
         adata = self.raw_request("GET", "wallets/{:s}/addresses".format(wid))
         return [(ad["id"], True if ad["state"] == "used" else False) for ad in adata]
 
-    def used_addresses(self, wid):
-        return set(
-            [ad[0] for ad in filter(operator.itemgetter(1), self.addresses(wid))]
-        )
+    def _addresses_set(self, wid):
+        return set(map(operator.itemgetter(0), self.addresses(wid)))
 
-    def _txdata2tx(self, txd, used_addresses=None):
+    def _txdata2tx(self, txd, addresses=None):
         inputs = (
             [serializers.get_input(inp) for inp in txd["inputs"]]
             if "inputs" in txd
@@ -147,13 +145,16 @@ class WalletREST(object):
         )
         local_inputs = set()
         local_outputs = set()
-        if used_addresses:
+        amount = Decimal(0)
+        if addresses:
             for out in outputs:
-                if out.address and out.address in used_addresses:
+                if out.address and out.address in addresses:
                     local_outputs.add(out)
+                    amount += out.amount
             for inp in inputs:
-                if inp.address and inp.address in used_addresses:
+                if inp.address and inp.address in addresses:
                     local_inputs.add(inp)
+        fee = serializers.get_amount(txd["fee"])
         metadata = (
             Metadata.deserialize(txd["metadata"])
             if txd.get("metadata", None) is not None
@@ -161,8 +162,8 @@ class WalletREST(object):
         )
         return Transaction(
             txid=txd["id"],
-            gross_amount=serializers.get_amount(txd["amount"]),
-            fee=serializers.get_amount(txd["fee"]),
+            amount=amount,
+            fee=fee,
             inserted_at=serializers.get_block_position(txd["inserted_at"])
             if "inserted_at" in txd
             else None,
@@ -174,6 +175,8 @@ class WalletREST(object):
             else None,
             inputs=inputs,
             outputs=outputs,
+            local_inputs=local_inputs,
+            local_outputs=local_outputs,
             metadata=metadata,
         )
 
@@ -186,7 +189,7 @@ class WalletREST(object):
         if end is not None:
             data["end"] = end.isoformat(timespec="seconds")
         return [
-            self._txdata2tx(txd, used_addresses=self.used_addresses(wid))
+            self._txdata2tx(txd, addresses=self._addresses_set(wid))
             for txd in self.raw_request(
                 "GET", "wallets/{:s}/transactions".format(wid), data
             )
@@ -211,8 +214,7 @@ class WalletREST(object):
             data["time_to_live"] = serializers.store_interval(ttl)
         # NOTE: the order of the following two requests is important
         txd = self.raw_request("POST", "wallets/{:s}/transactions".format(wid), data)
-        used_addresses = self.used_addresses(wid)
-        return self._txdata2tx(txd, used_addresses)
+        return self._txdata2tx(txd, addresses=self._addresses_set(wid))
 
     def estimate_fee(self, wid, destinations, metadata):
         data = {

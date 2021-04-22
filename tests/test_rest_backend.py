@@ -124,30 +124,6 @@ class TestREST(JSONTestCase):
             )
 
     @responses.activate
-    def test_used_addresses(self):
-        responses.add(
-            responses.GET,
-            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
-            json=self._read(
-                "test_used_addresses-00-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
-            ),
-            status=200,
-        )
-        used_addresses = self.service.backend.used_addresses(
-            "eff9cc89621111677a501493ace8c3f05608c0ce"
-        )
-        self.assertIsInstance(used_addresses, set)
-        self.assertEqual(len(used_addresses), 2)
-        self.assertIn(
-            "addr_test1qr9ujxmsvdya6r4e9lxlu4n37svn52us7z8uzqdkhw8muqld56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqzuzvzt",
-            used_addresses,
-        )
-        self.assertIn(
-            "addr_test1qp64xq7fsz9kvjwjy5tzfpetp2jmmhhk68kw066wqvyfgvhd56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqj7msh0",
-            used_addresses,
-        )
-
-    @responses.activate
     def test_list_addresses_with_usage(self):
         responses.add(
             responses.GET,
@@ -317,6 +293,9 @@ class TestREST(JSONTestCase):
         self.assertIsInstance(txn, Transaction)
         self.assertEqual(len(txn.inputs), 1)
         self.assertEqual(len(txn.outputs), 4)
+        self.assertEqual(len(txn.local_inputs), 1)
+        self.assertEqual(len(txn.local_outputs), 3)
+        self.assertEqual(txn.amount_out, Decimal("1.234567"))
 
     @responses.activate
     def test_transfer_with_metadata(self):
