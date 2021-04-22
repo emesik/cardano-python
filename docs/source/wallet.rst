@@ -54,7 +54,7 @@ will be null and the transaction history empty. This is because of ongoing sync 
 the entire blockchain for transaction history.
 
 Balance tuple
-^^^^^^^^^^^^^
+~~~~~~~~~~~~~
 
 The balance returned by ``wal.balance()`` (or methods that refer to native assets) is a subclass of
 ``collections.namedtuple``. It consists of three elements:
@@ -68,7 +68,7 @@ The balance returned by ``wal.balance()`` (or methods that refer to native asset
 Hence, to just get the full balance, you may use ``wal.balance().total``.
 
 Sync progress
-^^^^^^^^^^^^^
+~~~~~~~~~~~~~
 
 The value returned by ``.sync_progress()`` is a float number that represents how advanced the
 synchronization process is. It starts from ``0.0`` and goes up to ``1.0`` which says the wallet is

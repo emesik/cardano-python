@@ -87,7 +87,7 @@ structure is beyond the scope of this documentation, however you may read this `
 .. _`issue #5`: https://github.com/emesik/cardano-python/issues/5
 
 Storing and retrieving metadata
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Metadata can be passed to ``Wallet.transfer()`` and ``Wallet.transfer_multiple()`` methods as
 :class:`dict` or :class:`Metadata` instance. It will be instantly available in the ``.metadata``
@@ -101,21 +101,33 @@ attribute of the resulting :class:`Transaction` object.
         metadata={1: "first value", 23: "next value"},
         passphrase="xxx")
 
-    In [18]: tx.metadata
-    Out[18]: {1: 'first value', 23: 'next value'}
+    In [24]: tx.metadata
+    Out[24]: {1: 'first value', 23: 'next value'}
+
+
+Metadata can be initialized separately by passing a list of ``(key, value)`` pairs.
+
+.. code-block:: python
+
+    In [25]: m = Metadata(((1, "first value"), (23, "next value")))
+
+    In [26]: m
+    Out[26]: {1: 'first value', 23: 'next value'}
+
+Such instance can be also passed as ``metadata`` parameter to the transfer methods.
 
 
 API reference
 -------------
 
 Transactions
-^^^^^^^^^^^^
+~~~~~~~~~~~~
 
 .. automodule:: cardano.transaction
    :members:
 
 Numbers
-^^^^^^^
+~~~~~~~
 
 A submodule with helpers useful for unit conversion. The idea is to represent amounts in ADA as
 :class:`Decimal` type with 6 places of precision. For low-level backends, however, it's easier
@@ -128,7 +140,7 @@ Also, :class:`float` arguments are accepted but will issue a :class:`RuntimeWarn
    :members:
 
 Metadata
-^^^^^^^^
+~~~~~~~~
 
 A class representing Cardano transaction metadata. Inherits from ``dict`` and offers both 
 validation and serialization of the data.
