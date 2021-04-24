@@ -50,6 +50,18 @@ class AssetID(object):
 StakePoolStatus = enum.Enum("StakePoolStatus", "ACTIVE RETIRING DELISTED")
 StakePoolStatus.__doc__ = "Represents stake pool status"
 
+StakeRewardMetrics = collections.namedtuple(
+    "StakeRewardMetrics",
+    [
+        "expected",
+        "stake",
+    ],
+)
+StakeRewardMetrics.__doc__ = "Represents stake pool reward metrics"
+StakeRewardMetrics.expected.__doc__ = "Expected rewards at the end of an epoch, in ADA"
+StakeRewardMetrics.stake.__doc__ = (
+    "Staked amount against which rewards were calculated, in ADA"
+)
 
 StakePoolInfo = collections.namedtuple(
     "StakePoolInfo",
@@ -60,9 +72,13 @@ StakePoolInfo = collections.namedtuple(
         "name",
         "description",
         "homepage",
+        "rewards",
         "cost",
         "margin",
         "pledge",
+        "relative_stake",
+        "saturation",
+        "produced_blocks",
         "retirement_epoch",
         "retirement_datetime",
     ],
@@ -77,6 +93,14 @@ StakePoolInfo.homepage.__doc__ = "Homepage URL"
 StakePoolInfo.cost.__doc__ = "Fixed pool running cost in ADA"
 StakePoolInfo.margin.__doc__ = "Operator's margin on the total reward before splitting it among stakeholders (as :class:`Decimal` fraction)"
 StakePoolInfo.pledge.__doc__ = "Minimal stake amount that the pool is willing to honor"
+StakePoolInfo.relative_stake.__doc__ = "The live pool stake relative to the total stake"
+StakePoolInfo.saturation.__doc__ = (
+    "Saturation-level of the pool based on the desired number "
+    "of pools aimed by the network. A value above 1 indicates that the pool is saturated."
+)
+StakePoolInfo.produced_blocks.__doc__ = (
+    "Number of blocks produced by a given stake pool in its lifetime."
+)
 StakePoolInfo.retirement_epoch.__doc__ = "The epoch in which the pool retires"
 StakePoolInfo.retirement_datetime.__doc__ = (
     "The start of epoch in which the pool retires"

@@ -140,9 +140,7 @@ class Metadata(dict):
                 key = tuple(key)
             elif isinstance(key, dict):
                 key = ImmutableDict(key)
-            data[key] = Metadata.TYPE_RESOLVERS[vtype](
-                vval
-            )
+            data[key] = Metadata.TYPE_RESOLVERS[vtype](vval)
         return data
 
     @staticmethod
@@ -175,9 +173,16 @@ class ImmutableDict(dict):
     A flavor of ``dict`` with all mutating methods blocked and hash generation added.
     It can be used as mapping keys.
     """
+
     def __hash__(self):
-        return hash("|".join(["{}={}".format(*i) for i in sorted(self.items(),
-                    key=operator.itemgetter(0))]))
+        return hash(
+            "|".join(
+                [
+                    "{}={}".format(*i)
+                    for i in sorted(self.items(), key=operator.itemgetter(0))
+                ]
+            )
+        )
 
     def __setitem__(self, key, value):
         raise RuntimeError("ImmutableDict doesn't allow changes")

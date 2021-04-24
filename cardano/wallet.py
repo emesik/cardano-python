@@ -1,4 +1,5 @@
 from .address import Address
+from .simpletypes import StakePoolInfo
 from . import exceptions
 
 
@@ -151,12 +152,32 @@ class Wallet(object):
         """
         return self.backend.estimate_fee(self.wid, destinations, metadata)
 
-    def stake_pools(self, stake):
+    def stake_pools(self, stake=None):
         """
         Returns a list of known stake pools ordered by descending rewards.
 
-        :param stake:   The amount of ADA to be staked
+        :param stake:   The amount of ADA to be staked. Optional. If omitted, the wallet's total
+                        balance will be used instead.
         :type stake:    :class:`Decimal`
         :rtype:         :class:`list`
         """
-        return self.backend.stake_pools(self.wid, stake)
+        return self.backend.stake_pools(
+            self.wid, stake if stake is not None else self.balance().total
+        )
+
+    def stake(self, pool):
+        """
+        Stakes all wallet balance at the given pool.
+
+        :param pool:        The pool to stake ADA at
+        :type stake:        Pool ID as hex :class:`str`
+                            or :class:`StakePoolInfo <cardano.simpletypes.StakePoolInfo>`
+        :param passphrase:  the passphrase to the wallet. It takes precedence over `self.passphrase`
+                            and is discarded after use. If neither `self.passphrase` nor
+                            `passphrase` is set,
+                            a :class:`MissingPassphrase <cardano.exceptions.MissingPassphrase>`
+                            exception will be raised.
+        :rtype:             :class:`Transaction <cardano.transaction.Transaction>`
+        """
+        pool_id = pool.id if isinstance(pool, StakePoolInfo) else pool
+        return self.backend.stake(self.wid, pool_id)

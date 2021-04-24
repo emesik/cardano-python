@@ -67,8 +67,13 @@ class Transaction(object):
     @property
     def amount_out(self):
         return as_ada(
-            max(0, self.local_inputs_sum - self.local_outputs_sum - self.fee if self.fee is not None
-                else 0))
+            max(
+                0,
+                self.local_inputs_sum - self.local_outputs_sum - self.fee
+                if self.fee is not None
+                else 0,
+            )
+        )
 
 
 class IOBase(object):

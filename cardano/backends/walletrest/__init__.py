@@ -8,7 +8,13 @@ import urllib
 
 from ...metadata import Metadata
 from ...numbers import from_lovelaces, to_lovelaces
-from ...simpletypes import AssetID, Balance, StakePoolStatus, StakePoolInfo
+from ...simpletypes import (
+    AssetID,
+    Balance,
+    StakePoolStatus,
+    StakeRewardMetrics,
+    StakePoolInfo,
+)
 from ...transaction import Transaction
 from . import exceptions
 from . import serializers
@@ -50,7 +56,7 @@ class WalletREST(object):
         if rsp.status_code != 204:  # if content exists
             result = rsp.json(parse_float=Decimal)
             _ppresult = json.dumps(
-                result, cls=JSONWithDecimalEncoder, indent=2, sort_keys=True
+                rsp.json(), cls=JSONWithDecimalEncoder, indent=2, sort_keys=True
             )
             _log.debug(u"Result:\n{result}".format(result=_ppresult))
         else:
@@ -240,7 +246,7 @@ class WalletREST(object):
             serializers.get_amount(feedata["estimated_max"]),
         )
 
-    def _stakepoolinfo(self, pooldata):
+    def _stakepoolinfo(self, pooldata, stake):
         retirement_epoch = (
             pooldata["retirement"]["epoch_number"]
             if "retirement" in pooldata and "epoch_number" in pooldata["retirement"]
@@ -265,6 +271,10 @@ class WalletREST(object):
             homepage = pooldata["metadata"]["homepage"]
         else:
             ticker = name = description = homepage = None
+        rewards = StakeRewardMetrics(
+            serializers.get_amount(pooldata["metrics"]["non_myopic_member_rewards"]),
+            stake,
+        )
         return StakePoolInfo(
             pooldata["id"],
             status,
@@ -272,9 +282,13 @@ class WalletREST(object):
             name,
             description,
             homepage,
+            rewards,
             serializers.get_amount(pooldata["cost"]),
             serializers.get_percent(pooldata["margin"]),
             serializers.get_amount(pooldata["pledge"]),
+            serializers.get_percent(pooldata["metrics"]["relative_stake"]),
+            pooldata["metrics"]["saturation"],
+            pooldata["metrics"]["produced_blocks"]["quantity"],
             retirement_epoch,
             retirement_datetime,
         )
@@ -284,4 +298,10 @@ class WalletREST(object):
         poolsdata = self.raw_request(
             "GET", "?".join(("stake-pools", urllib.parse.urlencode(urldata)))
         )
-        return [self._stakepoolinfo(pool) for pool in poolsdata]
+        return [self._stakepoolinfo(pool, stake) for pool in poolsdata]
+
+    def stake(self, wid, pool_id):
+        txdata = self.raw_request(
+            "PUT", "stake-pools/{:s}/wallets/{:s}".format(pool_id, wid)
+        )
+        return self._txdata2tx(txdata, addresses=self._addresses_set(wid))

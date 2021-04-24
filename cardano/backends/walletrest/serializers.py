@@ -16,6 +16,7 @@ def store_amount(amount):
 
 def get_percent(data):
     assert data["unit"] == "percent"
+    print(data)
     return Decimal(data["quantity"]) / Decimal(100)
 
 

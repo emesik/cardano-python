@@ -1,0 +1,343 @@
+[
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr",
+    "margin": {
+      "quantity": 1,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 193229,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 10650,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.21,
+        "unit": "percent"
+      },
+      "saturation": 1.0654406414364401
+    },
+    "pledge": {
+      "quantity": 80000000000000,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool1tzmx7k40sm8kheam3pr2d4yexrp3jmv8l50suj6crnvn6dc2429",
+    "margin": {
+      "quantity": 3.5,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 184407,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 977,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.14,
+        "unit": "percent"
+      },
+      "saturation": 0.7013976490941689
+    },
+    "pledge": {
+      "quantity": 54000000000000,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool1d03p2xfdcq09efx0hgy4jkr0tqdgvklues5cg3ud45t9wndafmm",
+    "margin": {
+      "quantity": 1.77,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 180280,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 5624,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.19,
+        "unit": "percent"
+      },
+      "saturation": 0.9695332374085699
+    },
+    "pledge": {
+      "quantity": 40000000000000,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool14pdhhugxlqp9vta49pyfu5e2d5s82zmtukcy9x5ylukpkekqk8l",
+    "margin": {
+      "quantity": 1.62,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 179357,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 4881,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.19,
+        "unit": "percent"
+      },
+      "saturation": 0.9494140497298992
+    },
+    "pledge": {
+      "quantity": 38000000000000,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool1cr8vpy3ta3smcxjq8hfu8n2chxhtc78ukfruqjhfgarf5azypen",
+    "margin": {
+      "quantity": 1,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 178427,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 2189,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.22,
+        "unit": "percent"
+      },
+      "saturation": 1.0860573183579258
+    },
+    "pledge": {
+      "quantity": 60000000000000,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool1rnsw42f2q0u9fc32ttxy9l085n736jxz07lvwutz63wpyef03zh",
+    "margin": {
+      "quantity": 2,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 178040,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 5382,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.17,
+        "unit": "percent"
+      },
+      "saturation": 0.8700015163859899
+    },
+    "pledge": {
+      "quantity": 36963696369636,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool1aqr0p4g9zmks8lvkdhe8qpff76jhy8ggl4pen3aa34ftwfegr8x",
+    "margin": {
+      "quantity": 1.5,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 177768,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 4412,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.1,
+        "unit": "percent"
+      },
+      "saturation": 0.504649831706148
+    },
+    "pledge": {
+      "quantity": 35000000000000,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 345000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool185g59xpqzt7gf0ljr8v8f3akl95qnmardf2f8auwr3ffx7atjj5",
+    "margin": {
+      "quantity": 1,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 169536,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 1516,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.12,
+        "unit": "percent"
+      },
+      "saturation": 0.5870519113786751
+    },
+    "pledge": {
+      "quantity": 20000000000000,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool17vs6ywf7yv5fhqkp7w32t9yajppzgvmuef7fmarce0djummp4t9",
+    "margin": {
+      "quantity": 2,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 169417,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 1297,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.08,
+        "unit": "percent"
+      },
+      "saturation": 0.38642092184433385
+    },
+    "pledge": {
+      "quantity": 30000000000000,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool18t36el98mr7nss5h2a2aynlv9uytj4m27kwprr83as2ajdp8rf8",
+    "margin": {
+      "quantity": 15,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 165350,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 6077,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.2,
+        "unit": "percent"
+      },
+      "saturation": 1.018776011295088
+    },
+    "pledge": {
+      "quantity": 64000000000000,
+      "unit": "lovelace"
+    }
+  },
+  {
+    "cost": {
+      "quantity": 340000000,
+      "unit": "lovelace"
+    },
+    "flags": [],
+    "id": "pool163vwf7kd7kpjxcntrdpw42l5thtngvgcl2k3rlprymwfz5au4h6",
+    "margin": {
+      "quantity": 2.25,
+      "unit": "percent"
+    },
+    "metrics": {
+      "non_myopic_member_rewards": {
+        "quantity": 164475,
+        "unit": "lovelace"
+      },
+      "produced_blocks": {
+        "quantity": 2654,
+        "unit": "block"
+      },
+      "relative_stake": {
+        "quantity": 0.19,
+        "unit": "percent"
+      },
+      "saturation": 0.9494780583518441
+    },
+    "pledge": {
+      "quantity": 15000000000000,
+      "unit": "lovelace"
+    }
+  }
+]

@@ -468,3 +468,27 @@ class TestREST(JSONTestCase):
         )
         self.assertEqual(est_min, Decimal("0.180989"))
         self.assertEqual(est_max, Decimal("0.187193"))
+
+    @responses.activate
+    def test_stake_pools(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_stake_pools-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("stake-pools?stake=1054211650"),
+            json=self._read(
+                "test_stake_pools-10-GET_stake_pools_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        pools = wallet.stake_pools()
+        self.assertEqual(len(pools), 11)
+        self.assertEqual(pools[0].rewards.expected, Decimal("0.193229"))
+        self.assertEqual(pools[0].rewards.stake, Decimal("1054.211650"))
