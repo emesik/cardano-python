@@ -1,12 +1,14 @@
+from dateutil.parser import isoparse
 from decimal import Decimal
 import json
 import logging
 import operator
 import requests
+import urllib
 
 from ...metadata import Metadata
-from ...numbers import from_lovelaces
-from ...simpletypes import AssetID, Balance
+from ...numbers import from_lovelaces, to_lovelaces
+from ...simpletypes import AssetID, Balance, StakePoolStatus, StakePoolInfo
 from ...transaction import Transaction
 from . import exceptions
 from . import serializers
@@ -237,3 +239,49 @@ class WalletREST(object):
             serializers.get_amount(feedata["estimated_min"]),
             serializers.get_amount(feedata["estimated_max"]),
         )
+
+    def _stakepoolinfo(self, pooldata):
+        retirement_epoch = (
+            pooldata["retirement"]["epoch_number"]
+            if "retirement" in pooldata and "epoch_number" in pooldata["retirement"]
+            else None
+        )
+        retirement_datetime = (
+            isoparse(pooldata["retirement"]["epoch_start_time"])
+            if "retirement" in pooldata and "epoch_start_time" in pooldata["retirement"]
+            else None
+        )
+        status = (
+            StakePoolStatus.DELISTED
+            if "flags" in pooldata and "delisted" in pooldata["flags"]
+            else StakePoolStatus.RETIRING
+            if retirement_epoch or retirement_datetime
+            else StakePoolStatus.ACTIVE
+        )
+        if "metadata" in pooldata:
+            ticker = pooldata["metadata"]["ticker"]
+            name = pooldata["metadata"]["name"]
+            description = pooldata["metadata"]["description"]
+            homepage = pooldata["metadata"]["homepage"]
+        else:
+            ticker = name = description = homepage = None
+        return StakePoolInfo(
+            pooldata["id"],
+            status,
+            ticker,
+            name,
+            description,
+            homepage,
+            serializers.get_amount(pooldata["cost"]),
+            serializers.get_percent(pooldata["margin"]),
+            serializers.get_amount(pooldata["pledge"]),
+            retirement_epoch,
+            retirement_datetime,
+        )
+
+    def stake_pools(self, wid, stake):
+        urldata = {"stake": to_lovelaces(stake)}
+        poolsdata = self.raw_request(
+            "GET", "?".join(("stake-pools", urllib.parse.urlencode(urldata)))
+        )
+        return [self._stakepoolinfo(pool) for pool in poolsdata]

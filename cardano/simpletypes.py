@@ -1,4 +1,5 @@
 import collections
+import enum
 
 
 Balance = collections.namedtuple("Balance", ["total", "available", "reward"])
@@ -44,3 +45,39 @@ class AssetID(object):
 
     def __hash__(self):
         return hash(str(self))
+
+
+StakePoolStatus = enum.Enum("StakePoolStatus", "ACTIVE RETIRING DELISTED")
+StakePoolStatus.__doc__ = "Represents stake pool status"
+
+
+StakePoolInfo = collections.namedtuple(
+    "StakePoolInfo",
+    [
+        "id",
+        "status",
+        "ticker",
+        "name",
+        "description",
+        "homepage",
+        "cost",
+        "margin",
+        "pledge",
+        "retirement_epoch",
+        "retirement_datetime",
+    ],
+)
+StakePoolInfo.__doc__ = "Stores stake pool data"
+StakePoolInfo.id.__doc__ = "Unique ID"
+StakePoolInfo.status.__doc__ = "Status, one of :class:`StakePoolStatus` enum"
+StakePoolInfo.ticker.__doc__ = "3-5 chars long ticker"
+StakePoolInfo.name.__doc__ = "Name"
+StakePoolInfo.description.__doc__ = "Description"
+StakePoolInfo.homepage.__doc__ = "Homepage URL"
+StakePoolInfo.cost.__doc__ = "Fixed pool running cost in ADA"
+StakePoolInfo.margin.__doc__ = "Operator's margin on the total reward before splitting it among stakeholders (as :class:`Decimal` fraction)"
+StakePoolInfo.pledge.__doc__ = "Minimal stake amount that the pool is willing to honor"
+StakePoolInfo.retirement_epoch.__doc__ = "The epoch in which the pool retires"
+StakePoolInfo.retirement_datetime.__doc__ = (
+    "The start of epoch in which the pool retires"
+)

@@ -1,3 +1,4 @@
+from decimal import Decimal
 from ...address import Address
 from ...numbers import from_lovelaces, to_lovelaces
 from ...simpletypes import BlockPosition
@@ -11,6 +12,11 @@ def get_amount(data):
 
 def store_amount(amount):
     return {"quantity": to_lovelaces(amount), "unit": "lovelace"}
+
+
+def get_percent(data):
+    assert data["unit"] == "percent"
+    return Decimal(data["quantity"]) / Decimal(100)
 
 
 def get_block_position(data):

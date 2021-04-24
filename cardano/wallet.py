@@ -150,3 +150,13 @@ class Wallet(object):
         :rtype: (``Decimal``, ``Decimal``)
         """
         return self.backend.estimate_fee(self.wid, destinations, metadata)
+
+    def stake_pools(self, stake):
+        """
+        Returns a list of known stake pools ordered by descending rewards.
+
+        :param stake:   The amount of ADA to be staked
+        :type stake:    :class:`Decimal`
+        :rtype:         :class:`list`
+        """
+        return self.backend.stake_pools(self.wid, stake)
