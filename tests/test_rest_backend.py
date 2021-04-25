@@ -566,3 +566,37 @@ class TestREST(JSONTestCase):
         self.assertIsNotNone(nxt.target_id)
         self.assertIsInstance(nxt.changes_at, Epoch)
         self.assertEqual(nxt.changes_at.number, 130)
+
+    @responses.activate
+    def test_unstake(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_unstake-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.DELETE,
+            self._url("stake-pools/*/wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_unstake-10-DELETE_stake_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
+            json=self._read(
+                "test_unstake-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        tx = wallet.unstake(passphrase=self.passphrase)
+        self.assertIsInstance(tx, Transaction)
+        self.assertEqual(tx.amount_in, Decimal("1.827679"))
+        self.assertEqual(tx.amount_out, 0)
+        self.assertEqual(len(tx.local_inputs), 1)
+        self.assertEqual(len(tx.local_outputs), 1)

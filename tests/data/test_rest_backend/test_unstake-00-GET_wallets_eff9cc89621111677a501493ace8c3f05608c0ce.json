@@ -1,0 +1,206 @@
+{
+  "address_pool_gap": 20,
+  "assets": {
+    "available": [
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "0c306361512844fbdb83294f278937c04af6e56ab1d94d2dd187d725",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "0f5e9e9143f4eb0317584aa295d0d2dc9741edfdbbe1af64f241aa32",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "19b5961ad59574e2eb90d80894bbca8b51b7e2fbfe8ac649697c1255",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "1c088dec595714fb23d3eb806dcffaaaec8c275b502e2cc047026012",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "2efcadf7209b422c7742c1b1ceb8b82cfd6ae6b099226bc195daddfa",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "57fbec4da0c525282f50f2ff2567ecb529c276ea972dd31a1e1d8e41",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "618e9db244d4832faf1bd937a423f3f8aea558bed396f74fa82f8fea",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "6604684337b45547a5fdfb418c6ad140aba3d02e65b0bb0dc3c492a1",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "68bf925a392af499964003a5caaef10edd1ceac7d2c08e7bd7b287d0",
+        "quantity": 1
+      },
+      {
+        "asset_name": "",
+        "policy_id": "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
+        "quantity": 2
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "73d4f77b57be5bbdf7c7cb475662083a4111f6e018cffb056142f14e",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "88c5393b19640c59611a73bf7ec7e7884fc228544a24b2e384d3ed32",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "9dfc0ed69a98a12f97b6a74e6a41cfb9aecdc5883b2ecbf2f9d13672",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "b03f3f89862ecb51522832535e525ec014c884e047f63acc786567bb",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "dcb9bccdb63474aaa16f0ef041c59c582bbd85ad19cca7119ba5ea79",
+        "quantity": 1
+      }
+    ],
+    "total": [
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "0c306361512844fbdb83294f278937c04af6e56ab1d94d2dd187d725",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "0f5e9e9143f4eb0317584aa295d0d2dc9741edfdbbe1af64f241aa32",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "19b5961ad59574e2eb90d80894bbca8b51b7e2fbfe8ac649697c1255",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "1c088dec595714fb23d3eb806dcffaaaec8c275b502e2cc047026012",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "2efcadf7209b422c7742c1b1ceb8b82cfd6ae6b099226bc195daddfa",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "57fbec4da0c525282f50f2ff2567ecb529c276ea972dd31a1e1d8e41",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "618e9db244d4832faf1bd937a423f3f8aea558bed396f74fa82f8fea",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "6604684337b45547a5fdfb418c6ad140aba3d02e65b0bb0dc3c492a1",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "68bf925a392af499964003a5caaef10edd1ceac7d2c08e7bd7b287d0",
+        "quantity": 1
+      },
+      {
+        "asset_name": "",
+        "policy_id": "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
+        "quantity": 2
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "73d4f77b57be5bbdf7c7cb475662083a4111f6e018cffb056142f14e",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "88c5393b19640c59611a73bf7ec7e7884fc228544a24b2e384d3ed32",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "9dfc0ed69a98a12f97b6a74e6a41cfb9aecdc5883b2ecbf2f9d13672",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "b03f3f89862ecb51522832535e525ec014c884e047f63acc786567bb",
+        "quantity": 1
+      },
+      {
+        "asset_name": "6c6f766164616e6674",
+        "policy_id": "dcb9bccdb63474aaa16f0ef041c59c582bbd85ad19cca7119ba5ea79",
+        "quantity": 1
+      }
+    ]
+  },
+  "balance": {
+    "available": {
+      "quantity": 1052036513,
+      "unit": "lovelace"
+    },
+    "reward": {
+      "quantity": 0,
+      "unit": "lovelace"
+    },
+    "total": {
+      "quantity": 1052036513,
+      "unit": "lovelace"
+    }
+  },
+  "delegation": {
+    "active": {
+      "status": "not_delegating"
+    },
+    "next": [
+      {
+        "changes_at": {
+          "epoch_number": 130,
+          "epoch_start_time": "2021-05-04T20:20:16Z"
+        },
+        "status": "delegating",
+        "target": "pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr"
+      }
+    ]
+  },
+  "id": "eff9cc89621111677a501493ace8c3f05608c0ce",
+  "name": "test wallet",
+  "passphrase": {
+    "last_updated_at": "2021-03-26T11:51:51.107507546Z"
+  },
+  "state": {
+    "status": "ready"
+  },
+  "tip": {
+    "absolute_slot_number": 25005543,
+    "epoch_number": 128,
+    "height": {
+      "quantity": 2525935,
+      "unit": "block"
+    },
+    "slot_number": 79143,
+    "time": "2021-04-25T18:19:19Z"
+  }
+}

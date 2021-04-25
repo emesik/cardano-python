@@ -316,3 +316,11 @@ class WalletREST(object):
             {"passphrase": passphrase},
         )
         return self._txdata2tx(txdata, addresses=self._addresses_set(wid))
+
+    def unstake(self, wid, passphrase):
+        txdata = self.raw_request(
+            "DELETE",
+            "stake-pools/*/wallets/{:s}".format(wid),
+            {"passphrase": passphrase},
+        )
+        return self._txdata2tx(txdata, addresses=self._addresses_set(wid))

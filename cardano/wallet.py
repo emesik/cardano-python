@@ -189,3 +189,16 @@ class Wallet(object):
         """
         pool_id = pool.id if isinstance(pool, StakePoolInfo) else pool
         return self.backend.stake(self.wid, pool_id, self._resolve_passphrase(passphrase))
+
+    def unstake(self, passphrase=None):
+        """
+        Cancels active stake delegation.
+
+        :param passphrase:  the passphrase to the wallet. It takes precedence over `self.passphrase`
+                            and is discarded after use. If neither `self.passphrase` nor
+                            `passphrase` is set,
+                            a :class:`MissingPassphrase <cardano.exceptions.MissingPassphrase>`
+                            exception will be raised.
+        :rtype:             :class:`Transaction <cardano.transaction.Transaction>`
+        """
+        return self.backend.unstake(self.wid, self._resolve_passphrase(passphrase))
