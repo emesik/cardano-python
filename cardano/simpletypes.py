@@ -18,6 +18,11 @@ BlockPosition.slot.__doc__ = "Slot number"
 BlockPosition.absolute_slot.__doc__ = "Absolute slot number"
 
 
+Epoch = collections.namedtuple(
+    "Epoch", ["number", "starts"]
+)
+
+
 class AssetID(object):
     """
     Represents the ID of a native Cardano asset. It consists of asset name and policy ID.
@@ -79,8 +84,7 @@ StakePoolInfo = collections.namedtuple(
         "relative_stake",
         "saturation",
         "produced_blocks",
-        "retirement_epoch",
-        "retirement_datetime",
+        "retirement",
     ],
 )
 StakePoolInfo.__doc__ = "Stores stake pool data"
@@ -101,7 +105,15 @@ StakePoolInfo.saturation.__doc__ = (
 StakePoolInfo.produced_blocks.__doc__ = (
     "Number of blocks produced by a given stake pool in its lifetime."
 )
-StakePoolInfo.retirement_epoch.__doc__ = "The epoch in which the pool retires"
-StakePoolInfo.retirement_datetime.__doc__ = (
-    "The start of epoch in which the pool retires"
+StakePoolInfo.retirement.__doc__ = "The :class:`Epoch` in which the pool retires"
+
+StakingStatus = collections.namedtuple("StakingStatus", [
+        "delegating",
+        "target_id",
+        "changes_at",
+    ],
 )
+StakingStatus.__doc__ = "Wallet's staking status"
+StakingStatus.delegating.__doc__ = "Whether the wallet is actively delegating"
+StakingStatus.target_id.__doc__ = "The ID of the pool the wallet is delegating to"
+StakingStatus.changes_at.__doc__ = ":class:`Epoch` since which the change comes live"

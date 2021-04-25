@@ -165,6 +165,14 @@ class Wallet(object):
             self.wid, stake if stake is not None else self.balance().total
         )
 
+    def staking_status(self):
+        """
+        Returns information about staking status.
+
+        :rtype:         :class:`StakingStatus <cardano.simpletypes.StakingStatus>`
+        """
+        return self.backend.staking_status(self.wid)
+
     def stake(self, pool, passphrase=None):
         """
         Stakes all wallet balance at the given pool.

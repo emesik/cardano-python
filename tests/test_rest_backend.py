@@ -5,6 +5,7 @@ import responses
 from cardano.address import Address
 from cardano.backends.walletrest import WalletREST
 from cardano.metadata import Metadata
+from cardano.simpletypes import Epoch, StakingStatus
 from cardano.transaction import Transaction
 from cardano.wallet import WalletService, Wallet
 
@@ -57,6 +58,13 @@ class TestREST(JSONTestCase):
         self.assertEqual(wallet.wid, "eff9cc89621111677a501493ace8c3f05608c0ce")
         self.assertAlmostEqual(wallet.sync_progress(), Decimal(1), places=2)
 
+        status, nexts = wallet.staking_status()
+        self.assertIsInstance(status, StakingStatus)
+        self.assertFalse(status.delegating)
+        self.assertIsNone(status.target_id)
+        self.assertIsNone(status.changes_at)
+        self.assertEqual(len(nexts), 0)
+
     @responses.activate
     def test_retrieve_wallet_not_synced(self):
         responses.add(
@@ -71,6 +79,13 @@ class TestREST(JSONTestCase):
         self.assertIsInstance(wallet, Wallet)
         self.assertEqual(wallet.wid, "eff9cc89621111677a501493ace8c3f05608c0ce")
         self.assertAlmostEqual(wallet.sync_progress(), Decimal("0.9827"), places=4)
+
+        status, nexts = wallet.staking_status()
+        self.assertIsInstance(status, StakingStatus)
+        self.assertFalse(status.delegating)
+        self.assertIsNone(status.target_id)
+        self.assertIsNone(status.changes_at)
+        self.assertEqual(len(nexts), 0)
 
     @responses.activate
     def test_retrieve_wallet_with_assets(self):
@@ -523,3 +538,27 @@ class TestREST(JSONTestCase):
         tx = wallet.stake("pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr",
                 passphrase=self.passphrase)
         self.assertIsInstance(tx, Transaction)
+
+    @responses.activate
+    def test_retrieve_wallet_pre_stake(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_retrieve_wallet_pre_stake-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        status, nexts = wallet.staking_status()
+        self.assertIsInstance(status, StakingStatus)
+        self.assertFalse(status.delegating)
+        self.assertIsNone(status.target_id)
+        self.assertIsNone(status.changes_at)
+        self.assertEqual(len(nexts), 1)
+        nxt = nexts[0]
+        self.assertIsInstance(nxt, StakingStatus)
+        self.assertTrue(nxt.delegating)
+        self.assertIsNotNone(nxt.target_id)
+        self.assertIsInstance(nxt.changes_at, Epoch)
+        self.assertEqual(nxt.changes_at.number, 130)

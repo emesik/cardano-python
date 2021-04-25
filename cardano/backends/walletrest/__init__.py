@@ -1,4 +1,3 @@
-from dateutil.parser import isoparse
 from decimal import Decimal
 import json
 import logging
@@ -11,9 +10,10 @@ from ...numbers import from_lovelaces, to_lovelaces
 from ...simpletypes import (
     AssetID,
     Balance,
+    StakePoolInfo,
     StakePoolStatus,
     StakeRewardMetrics,
-    StakePoolInfo,
+    StakingStatus,
 )
 from ...transaction import Transaction
 from . import exceptions
@@ -247,21 +247,14 @@ class WalletREST(object):
         )
 
     def _stakepoolinfo(self, pooldata, stake):
-        retirement_epoch = (
-            pooldata["retirement"]["epoch_number"]
-            if "retirement" in pooldata and "epoch_number" in pooldata["retirement"]
+        retirement = serializers.get_epoch(pooldata["retirement"])\
+            if "retirement" in pooldata and "epoch_number" in pooldata["retirement"] \
             else None
-        )
-        retirement_datetime = (
-            isoparse(pooldata["retirement"]["epoch_start_time"])
-            if "retirement" in pooldata and "epoch_start_time" in pooldata["retirement"]
-            else None
-        )
         status = (
             StakePoolStatus.DELISTED
             if "flags" in pooldata and "delisted" in pooldata["flags"]
             else StakePoolStatus.RETIRING
-            if retirement_epoch or retirement_datetime
+            if retirement
             else StakePoolStatus.ACTIVE
         )
         if "metadata" in pooldata:
@@ -289,8 +282,7 @@ class WalletREST(object):
             serializers.get_percent(pooldata["metrics"]["relative_stake"]),
             pooldata["metrics"]["saturation"],
             pooldata["metrics"]["produced_blocks"]["quantity"],
-            retirement_epoch,
-            retirement_datetime,
+            retirement,
         )
 
     def stake_pools(self, wid, stake):
@@ -299,6 +291,24 @@ class WalletREST(object):
             "GET", "?".join(("stake-pools", urllib.parse.urlencode(urldata)))
         )
         return [self._stakepoolinfo(pool, stake) for pool in poolsdata]
+
+    def _stakingstatus(self, data):
+        print(data)
+        return StakingStatus(
+            serializers.get_stakingstatus(data["status"]),
+            data["target"],
+            serializers.get_epoch(data["changes_at"])
+            )
+
+    def staking_status(self, wid):
+        sdata = self.raw_request("GET", "wallets/{:s}".format(wid))["delegation"]
+        active = sdata["active"]
+        return (
+            StakingStatus(
+                serializers.get_stakingstatus(active["status"]),
+                active["target"] if "target" in active else None,
+                None),
+            [self._stakingstatus(ss) for ss in sdata["next"]])
 
     def stake(self, wid, pool_id, passphrase):
         txdata = self.raw_request(
