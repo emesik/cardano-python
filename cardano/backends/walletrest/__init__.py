@@ -295,18 +295,15 @@ class WalletREST(object):
     def _stakingstatus(self, data):
         return StakingStatus(
             serializers.get_stakingstatus(data["status"]),
-            data["target"],
-            serializers.get_epoch(data["changes_at"])
+            data["target"] if "target" in data else None,
+            serializers.get_epoch(data["changes_at"]) if "changes_at" in data else None
             )
 
     def staking_status(self, wid):
         sdata = self.raw_request("GET", "wallets/{:s}".format(wid))["delegation"]
         active = sdata["active"]
         return (
-            StakingStatus(
-                serializers.get_stakingstatus(active["status"]),
-                active["target"] if "target" in active else None,
-                None),
+            self._stakingstatus(active),
             [self._stakingstatus(ss) for ss in sdata["next"]])
 
     def stake(self, wid, pool_id, passphrase):

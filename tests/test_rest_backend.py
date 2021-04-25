@@ -600,3 +600,28 @@ class TestREST(JSONTestCase):
         self.assertEqual(tx.amount_out, 0)
         self.assertEqual(len(tx.local_inputs), 1)
         self.assertEqual(len(tx.local_outputs), 1)
+
+    @responses.activate
+    def test_retrieve_wallet_pre_cancelled_stake(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_retrieve_wallet_pre_cancelled_stake-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        status, nexts = wallet.staking_status()
+        self.assertIsInstance(status, StakingStatus)
+        self.assertFalse(status.delegating)
+        self.assertIsNone(status.target_id)
+        self.assertIsNone(status.changes_at)
+        # the upcoming delegation has been cancelled but there's still a trace in next list
+        self.assertEqual(len(nexts), 1)
+        nxt = nexts[0]
+        self.assertIsInstance(nxt, StakingStatus)
+        self.assertFalse(nxt.delegating)
+        self.assertIsNone(nxt.target_id)
+        self.assertIsInstance(nxt.changes_at, Epoch)
+        self.assertEqual(nxt.changes_at.number, 130)
