@@ -538,6 +538,10 @@ class TestREST(JSONTestCase):
         tx = wallet.stake("pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr",
                 passphrase=self.passphrase)
         self.assertIsInstance(tx, Transaction)
+        self.assertEqual(tx.amount_in, 0)
+        self.assertEqual(tx.amount_out, 2)
+        self.assertEqual(len(tx.local_inputs), 1)
+        self.assertEqual(len(tx.local_outputs), 1)
 
     @responses.activate
     def test_retrieve_wallet_pre_stake(self):

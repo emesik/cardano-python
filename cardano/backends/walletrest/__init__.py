@@ -293,7 +293,6 @@ class WalletREST(object):
         return [self._stakepoolinfo(pool, stake) for pool in poolsdata]
 
     def _stakingstatus(self, data):
-        print(data)
         return StakingStatus(
             serializers.get_stakingstatus(data["status"]),
             data["target"],
