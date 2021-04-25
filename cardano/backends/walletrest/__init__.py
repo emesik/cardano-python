@@ -300,8 +300,10 @@ class WalletREST(object):
         )
         return [self._stakepoolinfo(pool, stake) for pool in poolsdata]
 
-    def stake(self, wid, pool_id):
+    def stake(self, wid, pool_id, passphrase):
         txdata = self.raw_request(
-            "PUT", "stake-pools/{:s}/wallets/{:s}".format(pool_id, wid)
+            "PUT",
+            "stake-pools/{:s}/wallets/{:s}".format(pool_id, wid),
+            {"passphrase": passphrase},
         )
         return self._txdata2tx(txdata, addresses=self._addresses_set(wid))

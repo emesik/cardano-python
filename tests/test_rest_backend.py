@@ -492,3 +492,34 @@ class TestREST(JSONTestCase):
         self.assertEqual(len(pools), 11)
         self.assertEqual(pools[0].rewards.expected, Decimal("0.193229"))
         self.assertEqual(pools[0].rewards.stake, Decimal("1054.211650"))
+
+    @responses.activate
+    def test_stake(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_stake-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.PUT,
+            self._url("stake-pools/pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr/wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_stake-10-PUT_stake_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
+            json=self._read(
+                "test_stake-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        tx = wallet.stake("pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr",
+                passphrase=self.passphrase)
+        self.assertIsInstance(tx, Transaction)

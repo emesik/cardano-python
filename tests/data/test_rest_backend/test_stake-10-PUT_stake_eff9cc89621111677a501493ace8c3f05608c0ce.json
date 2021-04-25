@@ -1,0 +1,58 @@
+{
+  "amount": {
+    "quantity": 2175137,
+    "unit": "lovelace"
+  },
+  "deposit": {
+    "quantity": 2000000,
+    "unit": "lovelace"
+  },
+  "direction": "outgoing",
+  "expires_at": {
+    "absolute_slot_number": 25005161,
+    "epoch_number": 128,
+    "slot_number": 78761,
+    "time": "2021-04-25T18:12:57Z"
+  },
+  "fee": {
+    "quantity": 175137,
+    "unit": "lovelace"
+  },
+  "id": "842783af006e9865cc228bb8ac3101fc54a264d5e4551d73ee575b3e1fa081c3",
+  "inputs": [
+    {
+      "address": "addr_test1qz33gzsqc3mcag2gadmk6lz0aggu925rzgplx7g7qxythm0d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswq45npgz",
+      "amount": {
+        "quantity": 642828611,
+        "unit": "lovelace"
+      },
+      "assets": [],
+      "id": "6be2431b6c6223077d2617b99387ac41381d5ded0d488ab5ca3638db5aad32a8",
+      "index": 3
+    }
+  ],
+  "metadata": null,
+  "mint": [],
+  "outputs": [
+    {
+      "address": "addr_test1qpd89t8vvf94yxpjuryam4943kxym4cfdrpkhdlnsr2prmhd56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswq0tl0xx",
+      "amount": {
+        "quantity": 640653474,
+        "unit": "lovelace"
+      },
+      "assets": []
+    }
+  ],
+  "pending_since": {
+    "absolute_slot_number": 24997956,
+    "epoch_number": 128,
+    "height": {
+      "quantity": 2525657,
+      "unit": "block"
+    },
+    "slot_number": 71556,
+    "time": "2021-04-25T16:12:52Z"
+  },
+  "status": "pending",
+  "withdrawals": []
+}

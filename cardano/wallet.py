@@ -165,7 +165,7 @@ class Wallet(object):
             self.wid, stake if stake is not None else self.balance().total
         )
 
-    def stake(self, pool):
+    def stake(self, pool, passphrase=None):
         """
         Stakes all wallet balance at the given pool.
 
@@ -180,4 +180,4 @@ class Wallet(object):
         :rtype:             :class:`Transaction <cardano.transaction.Transaction>`
         """
         pool_id = pool.id if isinstance(pool, StakePoolInfo) else pool
-        return self.backend.stake(self.wid, pool_id)
+        return self.backend.stake(self.wid, pool_id, self._resolve_passphrase(passphrase))
