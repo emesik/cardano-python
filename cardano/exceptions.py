@@ -12,3 +12,11 @@ class WalletException(CardanoException):
 
 class MissingPassphrase(WalletException):
     pass
+
+
+class TransactionException(WalletException):
+    pass
+
+
+class PoolAlreadyJoined(WalletException):
+    pass

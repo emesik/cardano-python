@@ -5,6 +5,7 @@ import operator
 import requests
 import urllib
 
+from ... import exceptions as main_exceptions
 from ...metadata import Metadata
 from ...numbers import from_lovelaces, to_lovelaces
 from ...simpletypes import (
@@ -64,8 +65,16 @@ class WalletREST(object):
             _log.debug(u"No result (HTTP 204)")
         if rsp.status_code == 400:
             raise exceptions.BadRequest(result["message"], result=result)
+        if rsp.status_code == 403:
+            if result["code"] == "pool_already_joined":
+                raise main_exceptions.PoolAlreadyJoined(result["message"])
         if rsp.status_code == 404:
             raise exceptions.NotFound(result["message"], result=result)
+        if rsp.status_code == 500:
+            if "code" in result:
+                if result["code"] == "created_invalid_transaction":
+                    raise exceptions.CreatedInvalidTransaction(result["message"], result=result)
+            raise exceptions.RESTServerError(result["message"], result=result)
         return result
 
     def wallet_ids(self):

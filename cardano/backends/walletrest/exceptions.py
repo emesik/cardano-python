@@ -13,3 +13,11 @@ class BadRequest(WalletRESTException):
 
 class NotFound(WalletRESTException):
     pass
+
+
+class RESTServerError(WalletRESTException):
+    pass
+
+
+class CreatedInvalidTransaction(WalletRESTException, exceptions.TransactionException):
+    pass
