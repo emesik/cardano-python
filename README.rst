@@ -58,7 +58,7 @@ The following timeline is still subject to reassessment, hopefully minimal.
 |            |         | - unstake                                                                |
 |            |         | - docs for 0.4 features                                                  |
 +------------+---------+--------------------------------------------------------------------------+
-| 2021-05-04 | 0.6     | - UTXO stats                                                             |
+| 2021-05-12 | 0.6     | - UTXO stats                                                             |
 |            |         | - coin selection                                                         |
 |            |         | - address validation                                                     |
 |            |         | - docs for 0.5 + 0.6 features                                            |
