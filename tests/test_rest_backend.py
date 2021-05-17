@@ -742,3 +742,30 @@ class TestREST(JSONTestCase):
         self.assertTrue(status.delegating)
         self.assertEqual(len(nexts), 1)
         self.assertFalse(nexts[0].delegating)
+
+    @responses.activate
+    def test_utxo_stats(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_utxo_stats-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url(
+                "wallets/eff9cc89621111677a501493ace8c3f05608c0ce/statistics/utxos"
+            ),
+            json=self._read(
+                "test_utxo_stats-10-GET_utxo_stats_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        total, dist, scale = wallet.utxo_stats()
+        self.assertEqual(total, Decimal("1052.422864"))
+        self.assertIsInstance(dist, dict)
+        self.assertEqual(len(dist), 17)
+        self.assertEqual(scale, "log10")

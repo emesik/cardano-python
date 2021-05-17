@@ -233,3 +233,6 @@ class Wallet(object):
         :rtype:             :class:`Transaction <cardano.transaction.Transaction>`
         """
         return self.backend.unstake(self.wid, self._resolve_passphrase(passphrase))
+
+    def utxo_stats(self):
+        return self.backend.utxo_stats(self.wid)

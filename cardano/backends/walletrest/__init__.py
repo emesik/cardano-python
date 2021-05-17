@@ -358,3 +358,20 @@ class WalletREST(object):
             {"passphrase": passphrase},
         )
         return self._txdata2tx(txdata, addresses=self._addresses_set(wid))
+
+    def utxo_stats(self, wid):
+        sdata = self.raw_request(
+            "GET",
+            "wallets/{:s}/statistics/utxos".format(wid),
+            {},
+        )
+        return (
+            serializers.get_amount(sdata["total"]),
+            {
+                from_lovelaces(int(lvl)): num
+                for (lvl, num) in sorted(
+                    sdata["distribution"].items(), key=operator.itemgetter(0)
+                )
+            },
+            sdata["scale"],
+        )
