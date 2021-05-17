@@ -573,12 +573,12 @@ class TestREST(JSONTestCase):
         self.assertEqual(nxt.changes_at.number, 130)
 
     @responses.activate
-    def test_unstake(self):
+    def test_unstake_before_start(self):
         responses.add(
             responses.GET,
             self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
             json=self._read(
-                "test_unstake-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_unstake_before_start-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=200,
         )
@@ -586,7 +586,7 @@ class TestREST(JSONTestCase):
             responses.DELETE,
             self._url("stake-pools/*/wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
             json=self._read(
-                "test_unstake-10-DELETE_stake_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_unstake_before_start-10-DELETE_stake_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=200,
         )
@@ -594,7 +594,7 @@ class TestREST(JSONTestCase):
             responses.GET,
             self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
             json=self._read(
-                "test_unstake-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_unstake_before_start-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=200,
         )
@@ -632,12 +632,12 @@ class TestREST(JSONTestCase):
         self.assertEqual(nxt.changes_at.number, 130)
 
     @responses.activate
-    def test_cancel_ongoing_stake_without_withdrawal(self):
+    def test_unstake_without_withdrawal(self):
         responses.add(
             responses.GET,
             self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
             json=self._read(
-                "test_cancel_ongoing_stake_without_withdrawal-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_unstake_without_withdrawal-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=200,
         )
@@ -645,7 +645,7 @@ class TestREST(JSONTestCase):
             responses.DELETE,
             self._url("stake-pools/*/wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
             json=self._read(
-                "test_cancel_ongoing_stake_without_withdrawal-10-DELETE_stake-pools_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_unstake_without_withdrawal-10-DELETE_stake-pools_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=403,
         )
@@ -699,12 +699,12 @@ class TestREST(JSONTestCase):
         self.assertEqual(len(tx.local_outputs), 2)
 
     @responses.activate
-    def test_cancel_ongoing_stake(self):
+    def test_unstake_after_withdrawal(self):
         responses.add(
             responses.GET,
             self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
             json=self._read(
-                "test_cancel_ongoing_stake-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_unstake_after_withdrawal-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=200,
         )
@@ -712,7 +712,7 @@ class TestREST(JSONTestCase):
             responses.DELETE,
             self._url("stake-pools/*/wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
             json=self._read(
-                "test_cancel_ongoing_stake-10-DELETE_stake-pools_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_unstake_after_withdrawal-10-DELETE_stake-pools_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=202,
         )
@@ -720,7 +720,7 @@ class TestREST(JSONTestCase):
             responses.GET,
             self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
             json=self._read(
-                "test_cancel_ongoing_stake-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_unstake_after_withdrawal-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=200,
         )
@@ -728,7 +728,7 @@ class TestREST(JSONTestCase):
             responses.GET,
             self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
             json=self._read(
-                "test_cancel_ongoing_stake-30-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+                "test_unstake_after_withdrawal-30-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
             status=200,
         )
