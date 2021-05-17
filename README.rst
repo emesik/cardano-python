@@ -4,7 +4,7 @@ Python Cardano module
 **This software is in early development phase. Please consider it experimental and don't rely on any
 API to be stable in the future.**
 
-There's release 0.5 available for those brave enough to try it.
+There's release 0.6 available for those brave enough to try it.
 
 This module is the implementation of `the idea`_ submitted to Catalyst Project.
 
@@ -25,15 +25,6 @@ the Cardano *testnet* for any software development and testing.
 
 Roadmap
 -------
-
-The roadmap is delayed from what I posted originally in the proposal. This is because I've mistaken
-the voting dates and during the work I also learned that some of the ideas aren't as easy as I
-thought them to be (surprise ;)
-
-I started the work even though the vote was still underway. As for today, it is confirmed the
-project would receive funding.
-
-The following timeline is still subject to reassessment, hopefully minimal.
 
 +------------+---------+--------------------------------------------------------------------------+
 | date       | version | features                                                                 |
@@ -58,22 +49,31 @@ The following timeline is still subject to reassessment, hopefully minimal.
 |            |         | - unstake                                                                |
 |            |         | - docs for 0.4 features                                                  |
 +------------+---------+--------------------------------------------------------------------------+
-| 2021-05-12 | 0.6     | - UTXO stats                                                             |
-|            |         | - coin selection                                                         |
-|            |         | - address validation                                                     |
+| 2021-05-17 | 0.6     | - UTXO stats                                                             |
 |            |         | - docs for 0.5 + 0.6 features                                            |
 +------------+---------+--------------------------------------------------------------------------+
+| 2021-06-XX |         | - advanced filtering of incoming and outgoing transfers                  |
+|            |         | - address validation                                                     |
++------------+---------+--------------------------------------------------------------------------+
+|            |         | **End of the Catalyst-funded phase**                                     |
++------------+---------+--------------------------------------------------------------------------+
+| future     |         | - native assets transfer                                                 |
+|            |         | - key operations (HD wallet key generation)                              |
+|            |         | - seed to key and vice versa conversion                                  |
+|            |         | - coin selection                                                         |
+|            |         | - advanced filtering of incoming and outgoing transfers                  |
+|            |         | - transaction forgetting                                                 |
+|            |         | - handling of Byron wallets                                              |
+|            |         | - Goguen features (smart contracts?)                                     |
++------------+---------+--------------------------------------------------------------------------+
 
-Also, there are optional features that aren't included in the Catalyst proposal.
-I'll try to implement them if time permits, otherwise the list below will become a TODO once
-the Catalyst-funded phase concludes.
 
-- key operations (HD wallet key generation)
-- seed to key and vice versa conversion
-- advanced filtering of incoming and outgoing transfers
-- transaction forgetting
-- handling of Byron wallets
-- Goguen features (smart contracts?)
+**Q:** Why the roadmap above differs so much from the plan presented in Catalyst proposal?
+
+**A:** While developing the module I discovered that some of the features I had originally declared
+were impossible to implement given the available tools. Also, the proposal lacked some features
+that are important but somehow I missed them when proposing. The roadmap consists of items I found
+both important and doable.
 
 Donate
 ------
