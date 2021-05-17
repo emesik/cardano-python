@@ -18,5 +18,13 @@ class TransactionException(WalletException):
     pass
 
 
-class PoolAlreadyJoined(WalletException):
+class StakingException(WalletException):
+    pass
+
+
+class PoolAlreadyJoined(StakingException):
+    pass
+
+
+class NonNullRewards(StakingException):
     pass

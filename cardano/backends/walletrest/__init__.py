@@ -34,6 +34,16 @@ class WalletREST(object):
     base_url = None
     timeout = 10
 
+    ERR2EXCEPTION = {
+        403: {
+            "pool_already_joined": main_exceptions.PoolAlreadyJoined,
+            "non_null_rewards": main_exceptions.NonNullRewards,
+        },
+        500: {
+            "created_invalid_transaction": exceptions.CreatedInvalidTransaction,
+        },
+    }
+
     def __init__(self, protocol="http", host="localhost", port=8090):
         self.base_url = "{protocol}://{host}:{port}/v2/".format(
             protocol=protocol, host=host, port=port
@@ -66,15 +76,25 @@ class WalletREST(object):
         if rsp.status_code == 400:
             raise exceptions.BadRequest(result["message"], result=result)
         if rsp.status_code == 403:
-            if result["code"] == "pool_already_joined":
-                raise main_exceptions.PoolAlreadyJoined(result["message"])
+            try:
+                raise self.ERR2EXCEPTION[rsp.status_code][result["code"]](
+                    result["message"]
+                )
+            except KeyError:
+                pass
+            raise exceptions.RESTServerError(result.get("message", "* NO MESSAGE *"))
         if rsp.status_code == 404:
             raise exceptions.NotFound(result["message"], result=result)
         if rsp.status_code == 500:
-            if "code" in result:
-                if result["code"] == "created_invalid_transaction":
-                    raise exceptions.CreatedInvalidTransaction(result["message"], result=result)
-            raise exceptions.RESTServerError(result["message"], result=result)
+            try:
+                raise self.ERR2EXCEPTION[rsp.status_code][result["code"]](
+                    result["message"], result=result
+                )
+            except KeyError:
+                pass
+            raise exceptions.RESTServerError(
+                result.get("message", "* NO MESSAGE *"), result=result
+            )
         return result
 
     def wallet_ids(self):
@@ -194,6 +214,10 @@ class WalletREST(object):
             outputs=outputs,
             local_inputs=local_inputs,
             local_outputs=local_outputs,
+            withdrawals=[
+                (serializers.get_amount(w["amount"]), w["stake_address"])
+                for w in txd.get("withdrawals", [])
+            ],
             metadata=metadata,
         )
 
@@ -212,9 +236,10 @@ class WalletREST(object):
             )
         ]
 
-    def transfer(self, wid, destinations, metadata, ttl, passphrase):
+    def transfer(self, wid, destinations, metadata, allow_withdrawal, ttl, passphrase):
         data = {
             "passphrase": passphrase,
+            "withdrawal": "self" if allow_withdrawal else None,
             "payments": [
                 {
                     "address": str(address),
@@ -256,9 +281,11 @@ class WalletREST(object):
         )
 
     def _stakepoolinfo(self, pooldata, stake):
-        retirement = serializers.get_epoch(pooldata["retirement"])\
-            if "retirement" in pooldata and "epoch_number" in pooldata["retirement"] \
+        retirement = (
+            serializers.get_epoch(pooldata["retirement"])
+            if "retirement" in pooldata and "epoch_number" in pooldata["retirement"]
             else None
+        )
         status = (
             StakePoolStatus.DELISTED
             if "flags" in pooldata and "delisted" in pooldata["flags"]
@@ -305,15 +332,16 @@ class WalletREST(object):
         return StakingStatus(
             serializers.get_stakingstatus(data["status"]),
             data["target"] if "target" in data else None,
-            serializers.get_epoch(data["changes_at"]) if "changes_at" in data else None
-            )
+            serializers.get_epoch(data["changes_at"]) if "changes_at" in data else None,
+        )
 
     def staking_status(self, wid):
         sdata = self.raw_request("GET", "wallets/{:s}".format(wid))["delegation"]
         active = sdata["active"]
         return (
             self._stakingstatus(active),
-            [self._stakingstatus(ss) for ss in sdata["next"]])
+            [self._stakingstatus(ss) for ss in sdata["next"]],
+        )
 
     def stake(self, wid, pool_id, passphrase):
         txdata = self.raw_request(

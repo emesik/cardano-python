@@ -15,6 +15,8 @@ class Transaction(object):
     :param outputs:         a sequence of :class:`Output` objects
     :param local_inputs:    a sequence of :class:`Input` objects that originate from local wallet
     :param local_outputs:   a sequence of :class:`Output` objects that are destined to local wallet
+    :param withdrawals:     a sequence of (:class:`Decimal`, :class:`str`) pairs of amounts and
+                            stake addresses
     :param metadata:        an instance of :class:`Metadata <cardano.metadata.Metadata>`
     """
 
@@ -24,6 +26,7 @@ class Transaction(object):
     outputs = None
     local_inputs = None
     local_outputs = None
+    withdrawals = None
     inserted_at = None
     expires_at = None
     pending_since = None
@@ -44,6 +47,9 @@ class Transaction(object):
         )
         self.local_outputs = kwargs.pop("local_outputs", []) or (
             self.local_outputs if self.local_outputs is not None else []
+        )
+        self.withdrawals = kwargs.pop("withdrawals", []) or (
+            self.withdrawals if self.withdrawals is not None else []
         )
         self.inserted_at = kwargs.pop("inserted_at", None) or self.inserted_at
         self.expires_at = kwargs.pop("expires_at", None) or self.expires_at

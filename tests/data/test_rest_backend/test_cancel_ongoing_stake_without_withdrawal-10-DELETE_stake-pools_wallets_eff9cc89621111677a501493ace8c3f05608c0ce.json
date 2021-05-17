@@ -1,0 +1,4 @@
+{
+  "code": "non_null_rewards",
+  "message": "It seems that you're trying to retire from delegation although you've unspoiled rewards in your rewards account! Make sure to withdraw your 249980 lovelace first."
+}

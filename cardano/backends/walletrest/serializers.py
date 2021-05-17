@@ -25,12 +25,14 @@ def get_block_position(data):
         data["epoch_number"], data["slot_number"], data["absolute_slot_number"]
     )
 
+
 def get_stakingstatus(val):
     if val == "delegating":
         return True
     if val == "not_delegating":
         return False
     raise ValueError("Encountered invalid staking status: {}".format(val))
+
 
 def get_epoch(data):
     return Epoch(data["epoch_number"], isoparse(data["epoch_start_time"]))

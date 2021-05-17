@@ -2,6 +2,7 @@ from decimal import Decimal
 import json
 import responses
 
+from cardano import exceptions
 from cardano.address import Address
 from cardano.backends.walletrest import WalletREST
 from cardano.metadata import Metadata
@@ -520,7 +521,9 @@ class TestREST(JSONTestCase):
         )
         responses.add(
             responses.PUT,
-            self._url("stake-pools/pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr/wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            self._url(
+                "stake-pools/pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr/wallets/eff9cc89621111677a501493ace8c3f05608c0ce"
+            ),
             json=self._read(
                 "test_stake-10-PUT_stake_eff9cc89621111677a501493ace8c3f05608c0ce.json"
             ),
@@ -535,8 +538,10 @@ class TestREST(JSONTestCase):
             status=200,
         )
         wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
-        tx = wallet.stake("pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr",
-                passphrase=self.passphrase)
+        tx = wallet.stake(
+            "pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr",
+            passphrase=self.passphrase,
+        )
         self.assertIsInstance(tx, Transaction)
         self.assertEqual(tx.amount_in, 0)
         self.assertEqual(tx.amount_out, 2)
@@ -625,3 +630,115 @@ class TestREST(JSONTestCase):
         self.assertIsNone(nxt.target_id)
         self.assertIsInstance(nxt.changes_at, Epoch)
         self.assertEqual(nxt.changes_at.number, 130)
+
+    @responses.activate
+    def test_cancel_ongoing_stake_without_withdrawal(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_cancel_ongoing_stake_without_withdrawal-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.DELETE,
+            self._url("stake-pools/*/wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_cancel_ongoing_stake_without_withdrawal-10-DELETE_stake-pools_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=403,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        status, nexts = wallet.staking_status()
+        self.assertIsInstance(status, StakingStatus)
+        self.assertTrue(status.delegating)
+        self.assertEqual(
+            status.target_id, "pool1tzmx7k40sm8kheam3pr2d4yexrp3jmv8l50suj6crnvn6dc2429"
+        )
+        self.assertIsNone(status.changes_at)
+        with self.assertRaises(exceptions.NonNullRewards):
+            wallet.unstake(passphrase=self.passphrase)
+
+    @responses.activate
+    def test_withdrawal(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_withdrawal-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.POST,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/transactions"),
+            json=self._read(
+                "test_withdrawal-10-POST_transfer_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
+            json=self._read(
+                "test_withdrawal-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        status, nexts = wallet.staking_status()
+        self.assertTrue(status.delegating)
+        tx = wallet.transfer(
+            "addr_test1qpjqfw0xn8wp3rt9633ja6ua2nfmpx70qdn67cutc93p02hd56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqvy6c2z",
+            1,
+            allow_withdrawal=True,
+            passphrase=self.passphrase,
+        )
+        self.assertEqual(len(tx.withdrawals), 1)
+        self.assertEqual(len(tx.local_outputs), 2)
+
+    @responses.activate
+    def test_cancel_ongoing_stake(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_cancel_ongoing_stake-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.DELETE,
+            self._url("stake-pools/*/wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_cancel_ongoing_stake-10-DELETE_stake-pools_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=202,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
+            json=self._read(
+                "test_cancel_ongoing_stake-20-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_cancel_ongoing_stake-30-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        status, nexts = wallet.staking_status()
+        self.assertTrue(status.delegating)
+        self.assertEqual(wallet.balance().reward, 0)
+        tx = wallet.unstake(passphrase=self.passphrase)
+        self.assertIsInstance(tx, Transaction)
+        status, nexts = wallet.staking_status()
+        self.assertTrue(status.delegating)
+        self.assertEqual(len(nexts), 1)
+        self.assertFalse(nexts[0].delegating)

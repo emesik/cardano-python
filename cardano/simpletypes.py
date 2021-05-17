@@ -18,9 +18,7 @@ BlockPosition.slot.__doc__ = "Slot number"
 BlockPosition.absolute_slot.__doc__ = "Absolute slot number"
 
 
-Epoch = collections.namedtuple(
-    "Epoch", ["number", "starts"]
-)
+Epoch = collections.namedtuple("Epoch", ["number", "starts"])
 
 
 class AssetID(object):
@@ -107,7 +105,9 @@ StakePoolInfo.produced_blocks.__doc__ = (
 )
 StakePoolInfo.retirement.__doc__ = "The :class:`Epoch` in which the pool retires"
 
-StakingStatus = collections.namedtuple("StakingStatus", [
+StakingStatus = collections.namedtuple(
+    "StakingStatus",
+    [
         "delegating",
         "target_id",
         "changes_at",

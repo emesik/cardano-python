@@ -64,6 +64,14 @@ class Wallet(object):
             Address(addr[0], wallet=self) for addr in self.backend.addresses(self.wid)
         ]
 
+    def first_unused_address(self):
+        """
+        Returns the first unused address. **There is no internal pointer and the result is based
+        on blockchain and mempool state only**, so multiple subsequent calls will return the same
+        address if no transfer is received between them.
+        """
+        return next(filter(lambda a: not a[1], self.addresses(with_usage=True)))[1]
+
     def balance(self):
         return self.backend.balance(self.wid)
 
@@ -91,7 +99,15 @@ class Wallet(object):
             )
         return passphrase
 
-    def transfer(self, address, amount, metadata=None, ttl=None, passphrase=None):
+    def transfer(
+        self,
+        address,
+        amount,
+        metadata=None,
+        allow_withdrawal=True,
+        ttl=None,
+        passphrase=None,
+    ):
         """
         Sends a transfer from the wallet. Returns the resulting transaction.
 
@@ -99,6 +115,8 @@ class Wallet(object):
         :param amount: amount to send
         :param metadata: metadata to be sent, as :class:`Metadata <cardano.metadata.Metadata>`
                     instance od ``dict`` mapping ``int`` keys to values of acceptable types
+        :param allow_withdrawal: Allow withdrawing staking rewards to cover the transaction amount
+                    or fee.
         :param ttl: Time To Live in seconds. After TTL has lapsed the nodes give up on broadcasting
                     the transaction. Leave `None` to use the default value.
         :param passphrase: the passphrase to the wallet. It takes precedence over `self.passphrase`
@@ -111,11 +129,19 @@ class Wallet(object):
             self.wid,
             ((address, amount),),
             metadata,
+            allow_withdrawal,
             ttl,
             self._resolve_passphrase(passphrase),
         )
 
-    def transfer_multiple(self, destinations, metadata=None, ttl=None, passphrase=None):
+    def transfer_multiple(
+        self,
+        destinations,
+        metadata=None,
+        allow_withdrawal=True,
+        ttl=None,
+        passphrase=None,
+    ):
         """
         Sends multiple transfers from the wallet. Returns the resulting transaction.
 
@@ -123,6 +149,8 @@ class Wallet(object):
                     pairs ``[(address, amount), ...]``
         :param metadata: metadata to be sent, as :class:`Metadata <cardano.metadata.Metadata>`
                     instance od ``dict`` mapping ``int`` keys to values of acceptable types
+        :param allow_withdrawal: Allow withdrawing staking rewards to cover the transaction amount
+                    or fee.
         :param ttl: Time To Live in seconds. After TTL has lapsed the nodes give up on broadcasting
                     the transaction. Leave `None` to use the default value.
         :param passphrase: the passphrase to the wallet. It takes precedence over `self.passphrase`
@@ -135,6 +163,7 @@ class Wallet(object):
             self.wid,
             destinations,
             metadata,
+            allow_withdrawal,
             ttl,
             self._resolve_passphrase(passphrase),
         )
@@ -188,7 +217,9 @@ class Wallet(object):
         :rtype:             :class:`Transaction <cardano.transaction.Transaction>`
         """
         pool_id = pool.id if isinstance(pool, StakePoolInfo) else pool
-        return self.backend.stake(self.wid, pool_id, self._resolve_passphrase(passphrase))
+        return self.backend.stake(
+            self.wid, pool_id, self._resolve_passphrase(passphrase)
+        )
 
     def unstake(self, passphrase=None):
         """
