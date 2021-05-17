@@ -29,9 +29,17 @@ You may query pools regardless of whether the wallet is currently delegating or 
 Staking status
 --------------
 
-The wallet might be in one of two states: delegating or not delegating. However, once delegation
+The wallet might be in one of two states: delegating or not delegating. Additionally, once delegation
 or withdrawal have been scheduled, they would also appear in the list of planned future operations.
 
+.. code-block:: python
+
+    In [32]: wallet.staking_status()
+    Out[32]: (StakingStatus(delegating=True, target_id='pool1tzmx7k40sm8kheam3pr2d4yexrp3jmv8l50suj6crnvn6dc2429', changes_at=None), [])
+
+
+The second element of the tuple returned by ``Wallet.staking_status()`` is a list of scheduled
+future staking status changes.
 
 Staking
 -------
@@ -49,3 +57,22 @@ Unstaking
 
 Cancelling an ongoing delegation is pretty straightforward. Just use the ``Wallet.unstake()``
 method, providing a passphrase and you will get the unstaking transaction as the result.
+
+However, if you have a positive reward balance in the wallet, it needs to be withdrawn first. You
+may do it by calling the ``Wallet.transfer()`` method for an amount higher than the accumulated
+reward and directing it to your first unused local address, for example:
+
+.. code-block:: python
+
+    In [33]: wallet.balance()
+    Out[33]: Balance(total=Decimal('1050.770234'), available=Decimal('1050.520254'), reward=Decimal('0.249980'))
+
+    In [34]: wtx = wallet.transfer(wallet.first_unused_address(), Decimal(1), allow_withdrawal=True)
+
+    In [35]: wtx.withdrawals
+    Out[35]: [(Decimal('0.249980'), 'stake_test1urk6dxxc3qp9mk7hvjpm95acm6vp2evjm6fdg8542s3jg8qtsgmvf')]
+
+    In [36]: utx = wallet.unstake()
+
+    In [37]: wallet.staking_status()
+    Out[37]: (StakingStatus(delegating=True, target_id='pool1tzmx7k40sm8kheam3pr2d4yexrp3jmv8l50suj6crnvn6dc2429', changes_at=None), [StakingStatus(delegating=False, target_id=None, changes_at=Epoch(number=134, starts=datetime.datetime(2021, 5, 24, 20, 20, 16, tzinfo=tzutc())))])
