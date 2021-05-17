@@ -51,6 +51,13 @@ described above.
 
 If successful, the result will be the delegation transaction.
 
+.. code-block:: python
+
+    In [33]: tx = wallet.stake("pool1xqh4kl5gzn4av7uf32lxas5k8tsfgvhy3hlnrg0fdp98q42jswr")
+
+    In [34]: tx.amount_out
+    Out[34]: Decimal('2.000000')
+
 
 Unstaking
 ---------
