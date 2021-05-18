@@ -16,15 +16,33 @@ class WalletService(object):
         self.backend = backend
 
     def wallets(self):
+        """
+        Returns the list of all :class:`Wallets <Wallet>` handled by the backend.
+        """
         return [Wallet(wid, backend=self.backend) for wid in self.backend.wallet_ids()]
 
     def wallet(self, wid, passphrase=None):
+        """
+        Returns the wallet of given ID, connected to the backend and equipped with the passphrase
+        if given.
+
+        :param wid:             The wallet ID (hex string)
+        :param passphrase:      The wallet passphrase for spending operations (plain text string)
+        :rtype:                 :class:`Wallet`
+        """
         return Wallet(wid, backend=self.backend, passphrase=passphrase)
 
     def create_wallet(self, name, mnemonic, passphrase, mnemonic_2f=None):
         """
-        Creates/restores a wallet. Returns only ID as the backend may need some time to sync
-        before being able to return full wallet data.
+        Creates/restores a wallet internally in the backend.
+        Returns only ID as the backend may need some time to sync before being able to return
+        full wallet data.
+
+        :param name:            Name of the wallet
+        :param mnemonic:        The mnemonic seed
+        :param passphrase:      The wallet passphrase for spending operations (plain text string)
+        :param mnemonic_2f:     An optional passphrase used to encrypt the mnemonic sentence
+        :rtype:                 :class:`str`
         """
         return self.backend.create_wallet(name, mnemonic, passphrase, mnemonic_2f)
 
@@ -52,9 +70,22 @@ class Wallet(object):
             raise ValueError("Wallet of id '{:s}' doesn't exist.".format(wid))
 
     def sync_progress(self):
+        """
+        Returns the progress of synchronization with the blockchain. The value is :class:`float`
+        ranging from ``0.0`` to ``1.0``.
+        """
         return self.backend.sync_progress(self.wid)
 
     def addresses(self, with_usage=False):
+        """
+        Returns full list of already generated addresses.
+
+        :param with_usage:  A :class:`bool` indicating whether to retrieve used/unused address
+                            status too.
+        :rtype:     :class:`list` of :class:`Address <cardano.address.Address>` objects when
+                    ``with_usage == False`` and of (:class:`Address <cardano.address.address>`,
+                    :class:`bool`) tuples otherwise.
+        """
         if with_usage:
             return [
                 (Address(addr[0], wallet=self), addr[1])
@@ -73,15 +104,25 @@ class Wallet(object):
         return next(filter(lambda a: not a[1], self.addresses(with_usage=True)))[1]
 
     def balance(self):
+        """
+        Returns the :class:`Balance <cardano.simpletypes.Balance>` of the wallet.
+        """
         return self.backend.balance(self.wid)
 
     def assets(self):
         return self.backend.asset_balances(self.wid)
 
     def delete(self):
+        """
+        Deletes the wallet from the backend. It doesn't wipe the funds; the wallet may be restored
+        later on, using the mnemonic phrase.
+        """
         return self.backend.delete_wallet(self.wid)
 
     def transactions(self):  # , start=None, end=None, order="ascending"):
+        """
+        Returns the list of all wallet's :class:`Transactions <cardano.transaction.Transaction>`.
+        """
         # WARNING: parameters don't really work; this is a known bug
         # if start:
         #    start = start.astimezone(tz=timezone.utc)
@@ -235,4 +276,7 @@ class Wallet(object):
         return self.backend.unstake(self.wid, self._resolve_passphrase(passphrase))
 
     def utxo_stats(self):
+        """
+        Returns UTXO statistics as a tuple of ``(total_balance, histogram, scale)``.
+        """
         return self.backend.utxo_stats(self.wid)
