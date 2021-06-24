@@ -1,19 +1,55 @@
 import unittest
 
-from cardano.address import Address
+from cardano.address import (
+    address,
+    Address,
+    ByronAddress,
+    IcarusAddress,
+    ShelleyAddress,
+)
 from cardano.consts import Era
 
+from .example_addresses import (
+    GENERAL_ERR,
+    ICARUS_OK,
+    BYRON_OK,
+    SHELLEY_OK,
+    ICARUS_ERR,
+    BYRON_ERR,
+    SHELLEY_ERR,
+)
 
-class TestAddress(unittest.TestCase):
-    def test_valid_shelley(self):
-        ADDR = "addr1v8fet8gavr6elqt6q50skkjf025zthqu6vr56l5k39sp9aqlvz2g4"
-        addr = Address(ADDR)
-        self.assertEqual(addr.era, Era.SHELLEY)
 
-    def test_invalid(self):
-        ADDR = "XXX"
-        with self.assertRaises(ValueError):
-            Address(ADDR)
+class BaseTestAddressOK(object):
+    address_list = None
+    AddressClass = None
+
+    def test_address(self):
+        for addr in self.address_list:
+            addrobj = address(addr)
+            self.assertIsInstance(addrobj, self.AddressClass)
+
+
+class TestByronAddressOK(BaseTestAddressOK, unittest.TestCase):
+    address_list = BYRON_OK
+    AddressClass = ByronAddress
+
+
+class TestIcarusAddressOK(BaseTestAddressOK, unittest.TestCase):
+    address_list = ICARUS_OK
+    AddressClass = IcarusAddress
+
+
+class TestShelleyAddressOK(BaseTestAddressOK, unittest.TestCase):
+    address_list = SHELLEY_OK
+    AddressClass = ShelleyAddress
+
+
+class TestAddressERR(unittest.TestCase):
+    def test_address(self):
+        for addr in GENERAL_ERR + BYRON_ERR + ICARUS_ERR + SHELLEY_ERR:
+            print(addr)
+            self.assertRaises(ValueError, address, addr)
 
 
 class TestComparisons(unittest.TestCase):
