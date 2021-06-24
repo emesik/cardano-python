@@ -26,7 +26,7 @@ _log = logging.getLogger(__name__)
 class JSONWithDecimalEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, Decimal):
-            return str(Decimal)
+            return str(o)
         return super(JSONWithDecimalEncoder, self).default(o)
 
 
