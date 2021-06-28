@@ -48,7 +48,6 @@ class TestShelleyAddressOK(BaseTestAddressOK, unittest.TestCase):
 class TestAddressERR(unittest.TestCase):
     def test_address(self):
         for addr in GENERAL_ERR + BYRON_ERR + ICARUS_ERR + SHELLEY_ERR:
-            print(addr)
             self.assertRaises(ValueError, address, addr)
 
 
