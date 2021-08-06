@@ -1,3 +1,4 @@
+import collections
 import operator
 
 from .address import Address
@@ -81,11 +82,33 @@ class Transaction(object):
             )
         )
 
+#    @property
+#    def assets(self):
+#        _assets = collections.defaultdict(int)
+#        print("i")
+#        for inp in self.inputs:
+#            print(inp.assets)
+#            for aid, aqty in inp.assets:
+#                _assets[aid] += -aqty if inp in self.local_inputs else aqty
+#                print(dict(_assets))
+#        print("o")
+#        for outp in self.outputs:
+#            print(outp.assets)
+#            for aid, aqty in outp.assets:
+#                print(outp in self.local_outputs)
+#                _assets[aid] += aqty if outp in self.local_outputs else -aqty
+#                print(dict(_assets))
+#        return dict(_assets)
+
+    def hash(self):
+        return self.txid
+
 
 class IOBase(object):
-    def __init__(self, address=None, amount=None):
+    def __init__(self, address=None, amount=None, assets=None):
         self.address = None if address is None else Address(address)
         self.amount = amount
+        self.assets = assets or []
 
 
 class Input(IOBase):
@@ -98,10 +121,12 @@ class Input(IOBase):
     :type address:  :class:`cardano.address.Address`
     :param amount:  the amount in ADA
     :type amount:   :class:`Decimal`
+    :param assets:  a sequence of :class:`AssetID <cardano.simpletypes.AssetID>` quantity pairs
+    :type assets:   :class:`list`
     """
 
-    def __init__(self, iid=None, address=None, amount=None):
-        super(Input, self).__init__(address=address, amount=amount)
+    def __init__(self, iid=None, address=None, amount=None, assets=None):
+        super(Input, self).__init__(address=address, amount=amount, assets=assets)
         self.id = iid
 
 
@@ -113,6 +138,8 @@ class Output(IOBase):
     :type address:  :class:`cardano.address.Address`
     :param amount:  the amount in ADA
     :type amount:   :class:`Decimal`
+    :param assets:  a sequence of :class:`AssetID <cardano.simpletypes.AssetID>` quantity pairs
+    :type assets:   :class:`list`
     """
 
     pass

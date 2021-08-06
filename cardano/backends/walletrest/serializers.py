@@ -2,7 +2,7 @@ from dateutil.parser import isoparse
 from decimal import Decimal
 from ...address import Address
 from ...numbers import from_lovelaces, to_lovelaces
-from ...simpletypes import BlockPosition, Epoch
+from ...simpletypes import AssetID, BlockPosition, Epoch
 from ...transaction import Input, Output
 
 
@@ -38,16 +38,28 @@ def get_epoch(data):
     return Epoch(data["epoch_number"], isoparse(data["epoch_start_time"]))
 
 
+def get_asset_id(data):
+    return AssetID(data["asset_name"], data["policy_id"])
+
+
+def get_asset_with_quantity(data):
+    return get_asset_id(data), data["quantity"]
+
+
 def get_input(data):
     return Input(
         iid=data["id"],
         address=Address(data["address"]) if "address" in data else None,
         amount=get_amount(data["amount"]) if "amount" in data else None,
+        assets=[get_asset_with_quantity(a) for a in data["assets"]]
+        if "assets" in data
+        else [],
     )
 
 
 def get_output(data):
-    return Output(address=Address(data["address"]), amount=get_amount(data["amount"]))
+    return Output(address=Address(data["address"]), amount=get_amount(data["amount"]),
+            assets=[get_asset_with_quantity(a) for a in data["assets"]] if "assets" in data else None)
 
 
 def store_interval(seconds):

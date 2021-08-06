@@ -30,3 +30,11 @@ class RESTServerError(WalletRESTException):
 
 class CreatedInvalidTransaction(WalletRESTException, exceptions.TransactionException):
     pass
+
+
+class NotSupported(WalletRESTException):
+    """
+    Raised when wallet doesn't provide the requested feature.
+    """
+
+    pass

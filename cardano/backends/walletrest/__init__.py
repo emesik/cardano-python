@@ -1,3 +1,4 @@
+from binascii import hexlify, unhexlify
 from decimal import Decimal
 import json
 import logging
@@ -150,11 +151,11 @@ class WalletREST(object):
             raise exceptions.NotSupported("Extra assets are not supported")
         assets = {}
         for ast in bdata["total"]:
-            aid = AssetID(ast["asset_name"], ast["policy_id"])
+            aid = AssetID(unhexlify(ast["asset_name"]), ast["policy_id"])
             assets[aid] = assets[aid] if aid in assets else {}
             assets[aid]["total"] = ast["quantity"]
         for ast in bdata["available"]:
-            aid = AssetID(ast["asset_name"], ast["policy_id"])
+            aid = AssetID(unhexlify(ast["asset_name"]), ast["policy_id"])
             assets[aid] = assets[aid] if aid in assets else {}
             assets[aid]["available"] = ast["quantity"]
         return {
@@ -244,8 +245,16 @@ class WalletREST(object):
                 {
                     "address": str(address),
                     "amount": serializers.store_amount(amount),
+                    "assets": [
+                        {
+                            "policy_id": asset.policy_id,
+                            "asset_name": asset.asset_name,
+                            "quantity": asset_amount,
+                        }
+                        for (asset, asset_amount) in assets
+                    ],
                 }
-                for (address, amount) in destinations
+                for (address, amount, assets) in destinations
             ],
         }
         if metadata is not None:

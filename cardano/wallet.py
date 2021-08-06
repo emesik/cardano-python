@@ -98,8 +98,9 @@ class Wallet(object):
     def first_unused_address(self):
         """
         Returns the first unused address. **There is no internal pointer and the result is based
-        on blockchain and mempool state only**, so multiple subsequent calls will return the same
-        address if no transfer is received between them.
+        on blockchain and mempool state only, and their interpretation by the backend**,
+        so multiple subsequent calls will return the same address if no transfer is received
+        between them.
         """
         return next(filter(lambda a: not a[1], self.addresses(with_usage=True)))[1]
 
@@ -110,6 +111,11 @@ class Wallet(object):
         return self.backend.balance(self.wid)
 
     def assets(self):
+        """
+        Returns the balance of native assets.
+
+        :rtype:     :class:`dict` of :class:`AssetID`: :class:`Balance <cardano.simpletypes.Balance>` pairs
+        """
         return self.backend.asset_balances(self.wid)
 
     def delete(self):
@@ -144,6 +150,7 @@ class Wallet(object):
         self,
         address,
         amount,
+        assets=None,
         metadata=None,
         allow_withdrawal=True,
         ttl=None,
@@ -154,6 +161,8 @@ class Wallet(object):
 
         :param address: destination :class:`Address <cardano.address.Address>` or subtype
         :param amount: amount to send
+        :param assets: a sequence of :class:`AssetID <cardano.simpletypes.AssetID>` and quantity
+                    pairs
         :param metadata: metadata to be sent, as :class:`Metadata <cardano.metadata.Metadata>`
                     instance od ``dict`` mapping ``int`` keys to values of acceptable types
         :param allow_withdrawal: Allow withdrawing staking rewards to cover the transaction amount
@@ -168,7 +177,7 @@ class Wallet(object):
         """
         return self.backend.transfer(
             self.wid,
-            ((address, amount),),
+            ((address, amount, assets or []),),
             metadata,
             allow_withdrawal,
             ttl,
@@ -200,9 +209,13 @@ class Wallet(object):
                     exception will be raised.
         :rtype: :class:`Transaction <cardano.transaction.Transaction>`
         """
+        dests = []
+        for d in destinations:
+            nd = d if len(d) == 3 else (d[0], d[1], [])
+            dests.append(nd)
         return self.backend.transfer(
             self.wid,
-            destinations,
+            dests,
             metadata,
             allow_withdrawal,
             ttl,

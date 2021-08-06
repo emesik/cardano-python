@@ -1,3 +1,4 @@
+import binascii
 import collections
 import enum
 
@@ -24,15 +25,34 @@ Epoch = collections.namedtuple("Epoch", ["number", "starts"])
 class AssetID(object):
     """
     Represents the ID of a native Cardano asset. It consists of asset name and policy ID.
-    It renders as string representation of ``policy_id:asset_name``.
+    It renders as string representation of ``asset_name:policy_id``.
+
+    The ``asset_name`` is always kept encoded as hexadecimal string and must be passed
+    to the constructor as such.
+
+    The ``.name_bytes`` property is a :class:`bytes` decoded representation of the hex.
+    Because Cardano allows full ASCII set to be used in asset names, some of them are not
+    safe to be displayed directly.
     """
 
-    asset_name = None
+    asset_name = ""
     policy_id = None
+    name_bytes = None
 
     def __init__(self, asset_name, policy_id):
-        self.asset_name = asset_name if asset_name is not None else self.asset_name
-        self.policy_id = policy_id or self.policy_id
+        asset_name = asset_name if asset_name is not None else self.asset_name
+        policy_id = policy_id or self.policy_id
+        # binascii.hexlify() returns bytes() for some unknown reason. We may expect them to be
+        # passed here:
+        if isinstance(asset_name, bytes):
+            self.name_bytes = binascii.unhexlify(asset_name)
+            self.asset_name = asset_name.decode()
+        elif isinstance(asset_name, str):
+            self.name_bytes = binascii.unhexlify(asset_name.encode())
+            self.asset_name = asset_name
+        else:
+            raise ValueError("The asset_name is neither str or bytes but {}".format(type(self.asset_name)))
+        self.policy_id = policy_id
 
     def __repr__(self):
         return "{:s}:{:s}".format(self.asset_name, self.policy_id)
