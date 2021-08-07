@@ -28,6 +28,10 @@ class TransactionException(WalletException):
     pass
 
 
+class CannotCoverFee(TransactionException):
+    pass
+
+
 class StakingException(WalletException):
     """Base error when delegating, withdrawing or cancelling stake."""
 

@@ -6,20 +6,20 @@ from cardano import exceptions
 from cardano.address import Address
 from cardano.backends.walletrest import WalletREST
 from cardano.metadata import Metadata
-from cardano.simpletypes import Epoch, StakingStatus
+from cardano.simpletypes import Epoch, StakingStatus, AssetID
 from cardano.transaction import Transaction
 from cardano.wallet import WalletService, Wallet
 
 from .base import JSONTestCase
 
 
-class TestREST(JSONTestCase):
+class TestSinglewallet(JSONTestCase):
     service = None
     passphrase = "pass.12345678"
     data_subdir = "test_rest_backend"
 
     def setUp(self):
-        super(TestREST, self).setUp()
+        super(TestSinglewallet, self).setUp()
         self.service = WalletService(WalletREST())
 
     def _url(self, path):
@@ -769,3 +769,105 @@ class TestREST(JSONTestCase):
         self.assertIsInstance(dist, dict)
         self.assertEqual(len(dist), 17)
         self.assertEqual(scale, "log10")
+
+
+class TestDoublewallet(JSONTestCase):
+    service = None
+    passphrasea = "pass.12345678"
+    passphraseb = "pass.87654321"
+    data_subdir = "test_rest_backend"
+
+    def setUp(self):
+        super(TestDoublewallet, self).setUp()
+        self.service = WalletService(WalletREST())
+        self.wala = self.service.wallet(
+            "04aebef49c24086f603db7a6d157f915c5c9411a", passphrase=self.passphrasea
+        )
+        self.walb = self.service.wallet(
+            "5e27c10c9cb253c93a771732fd7dcbb56d34bc47", passphrase=self.passphraseb
+        )
+
+    def _url(self, path):
+        return "".join([self.service.backend.base_url, path])
+
+    @responses.activate
+    def test_transfer_asset(self):
+        responses.add(
+            responses.POST,
+            self._url("wallets/{:s}/transactions".format(self.wala.wid)),
+            json=self._read(
+                "test_transfer_asset-10-POST_transfer_{:s}.json".format(self.wala.wid)
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/{:s}/addresses".format(self.wala.wid)),
+            json=self._read(
+                "test_transfer_asset-20-GET_addresses_{:s}.json".format(self.wala.wid)
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/{:s}".format(self.wala.wid)),
+            json=self._read(
+                "test_transfer_asset-30-GET_wallets_{:s}.json".format(self.wala.wid)
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/{:s}/transactions".format(self.walb.wid)),
+            json=self._read(
+                "test_transfer_asset-40-GET_transactions_{:s}.json".format(self.walb.wid)
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/{:s}/addresses".format(self.walb.wid)),
+            json=self._read(
+                "test_transfer_asset-50-GET_addresses_{:s}.json".format(self.walb.wid)
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/{:s}".format(self.walb.wid)),
+            json=self._read(
+                "test_transfer_asset-60-GET_wallets_{:s}.json".format(self.walb.wid)
+            ),
+            status=200,
+        )
+
+        asset_id = AssetID(
+            "", "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7"
+        )
+        tx_out = self.wala.transfer(
+            "addr_test1qqpwa4lv202c9q4fag5kepr0jjnreq8yxrjgau7u4ulppa9c69u4ed55s8p7nuef3z65fkjjxcslwdu3h75zl7zeuzgqv3l7cc",
+            2,
+            assets=[(asset_id, 1)],
+        )
+        self.assertEqual(tx_out.amount_in, 0)
+        self.assertEqual(tx_out.amount_out, 2)
+        self.assertEqual(len(tx_out.inputs), 2)         # one with asset, one with fee
+        self.assertEqual(len(tx_out.local_inputs), 2)   # both are local
+        self.assertEqual(len(tx_out.outputs), 2)        # payment + change
+        self.assertEqual(len(tx_out.local_outputs), 1)  # change
+
+        assetsa = self.wala.assets()
+        self.assertEqual(len(assetsa), 1)
+        self.assertIn(asset_id, assetsa)
+        self.assertEqual(assetsa[asset_id].total, 1)
+        self.assertEqual(assetsa[asset_id].available, 1)
+
+        tx_in = self.walb.transactions()[0]
+        self.assertEqual(tx_in.amount_in, 2)
+        self.assertEqual(tx_in.amount_out, 0)
+        self.assertEqual(len(tx_in.inputs), 2)          # one with asset, one with fee
+        self.assertEqual(len(tx_in.local_inputs), 0)    # none are local
+        self.assertEqual(len(tx_in.outputs), 2)         # payment + change
+        self.assertEqual(len(tx_in.local_outputs), 1)   # payment
+
+        assetsb = self.walb.assets()

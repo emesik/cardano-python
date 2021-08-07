@@ -39,6 +39,7 @@ class WalletREST(object):
         403: {
             "pool_already_joined": main_exceptions.PoolAlreadyJoined,
             "non_null_rewards": main_exceptions.NonNullRewards,
+            "cannot_cover_fee": main_exceptions.CannotCoverFee,
         },
         500: {
             "created_invalid_transaction": exceptions.CreatedInvalidTransaction,

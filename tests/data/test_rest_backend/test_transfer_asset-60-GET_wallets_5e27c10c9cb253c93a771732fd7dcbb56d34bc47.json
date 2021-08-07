@@ -1,0 +1,57 @@
+{
+  "address_pool_gap": 20,
+  "assets": {
+    "available": [
+      {
+        "asset_name": "",
+        "policy_id": "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
+        "quantity": 1
+      }
+    ],
+    "total": [
+      {
+        "asset_name": "",
+        "policy_id": "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
+        "quantity": 1
+      }
+    ]
+  },
+  "balance": {
+    "available": {
+      "quantity": 2000000,
+      "unit": "lovelace"
+    },
+    "reward": {
+      "quantity": 0,
+      "unit": "lovelace"
+    },
+    "total": {
+      "quantity": 2000000,
+      "unit": "lovelace"
+    }
+  },
+  "delegation": {
+    "active": {
+      "status": "not_delegating"
+    },
+    "next": []
+  },
+  "id": "5e27c10c9cb253c93a771732fd7dcbb56d34bc47",
+  "name": "wallet B",
+  "passphrase": {
+    "last_updated_at": "2021-08-07T09:40:30.991029966Z"
+  },
+  "state": {
+    "status": "ready"
+  },
+  "tip": {
+    "absolute_slot_number": 33971661,
+    "epoch_number": 148,
+    "height": {
+      "quantity": 2814257,
+      "unit": "block"
+    },
+    "slot_number": 405261,
+    "time": "2021-08-07T12:54:37Z"
+  }
+}

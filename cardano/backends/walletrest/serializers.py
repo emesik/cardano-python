@@ -58,8 +58,13 @@ def get_input(data):
 
 
 def get_output(data):
-    return Output(address=Address(data["address"]), amount=get_amount(data["amount"]),
-            assets=[get_asset_with_quantity(a) for a in data["assets"]] if "assets" in data else None)
+    return Output(
+        address=Address(data["address"]),
+        amount=get_amount(data["amount"]),
+        assets=[get_asset_with_quantity(a) for a in data["assets"]]
+        if "assets" in data
+        else None,
+    )
 
 
 def store_interval(seconds):

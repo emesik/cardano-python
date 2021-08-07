@@ -8,24 +8,30 @@ class TestCodec(unittest.TestCase):
     def test_ascii(self):
         name = "test coin"
         name_hex = hexlify(name.encode("ascii")).decode()
-        asset = AssetID(name_hex, "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7")
-        self.assertEqual(asset.name_bytes, name.encode('ascii'))
+        asset = AssetID(
+            name_hex, "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7"
+        )
+        self.assertEqual(asset.name_bytes, name.encode("ascii"))
 
     def test_utf8(self):
         name = "zażółć gęślą jaźń"
         name_hex = hexlify(name.encode("utf-8")).decode()
-        asset = AssetID(name_hex, "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7")
-        self.assertEqual(asset.name_bytes, name.encode('utf-8'))
+        asset = AssetID(
+            name_hex, "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7"
+        )
+        self.assertEqual(asset.name_bytes, name.encode("utf-8"))
 
 
 class TestComparisons(unittest.TestCase):
     def test_cmp_same_assetid(self):
         name = hexlify("name".encode())
         asset1 = AssetID(
-            name, "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
+            name,
+            "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
         )
         asset2 = AssetID(
-            name, "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
+            name,
+            "6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
         )
         self.assertEqual(asset1, asset2)
 
