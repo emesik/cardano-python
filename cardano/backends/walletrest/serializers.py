@@ -20,9 +20,17 @@ def get_percent(data):
     return Decimal(data["quantity"]) / Decimal(100)
 
 
+def get_height(data):
+    assert data["unit"] == "block"
+    return data["quantity"]
+
+
 def get_block_position(data):
     return BlockPosition(
-        data["epoch_number"], data["slot_number"], data["absolute_slot_number"]
+        data["epoch_number"],
+        data["slot_number"],
+        data["absolute_slot_number"],
+        get_height(data["height"]) if "height" in data else None,
     )
 
 

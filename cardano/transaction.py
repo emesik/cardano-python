@@ -1,8 +1,12 @@
 import operator
+import re
+import warnings
 
-from .address import Address
+from .address import Address, address
 from .metadata import Metadata
 from .numbers import as_ada
+
+__all__ = ("Transaction", "Input", "Output", "validate_txid", "TransactionManager")
 
 
 class Transaction(object):
@@ -30,10 +34,12 @@ class Transaction(object):
     inserted_at = None
     expires_at = None
     pending_since = None
+    status = None
     metadata = None
 
     def __init__(self, txid=None, **kwargs):
         self.txid = txid or self.txid
+        validate_txid(self.txid)
         fee = kwargs.pop("fee", None)
         self.fee = fee if fee is not None else self.fee
         self.inputs = kwargs.pop("inputs", []) or (
@@ -54,6 +60,7 @@ class Transaction(object):
         self.inserted_at = kwargs.pop("inserted_at", None) or self.inserted_at
         self.expires_at = kwargs.pop("expires_at", None) or self.expires_at
         self.pending_since = kwargs.pop("pending_since", None) or self.pending_since
+        self.status = kwargs.pop("status", None) or self.status
         self.metadata = kwargs.pop("metadata", Metadata()) or (
             self.metadata if self.metadata is not None else Metadata()
         )
@@ -116,3 +123,198 @@ class Output(IOBase):
     """
 
     pass
+
+
+def validate_txid(txid):
+    if not bool(re.compile("^[0-9a-f]{64}$").match(txid)):
+        raise ValueError(
+            "Transaction ID must be a 64-character hexadecimal string, not "
+            "'{}'".format(txid)
+        )
+    return txid
+
+
+class TransactionManager(object):
+    wid = None
+    backend = None
+
+    def __init__(self, wid, backend):
+        self.wid = wid
+        self.backend = backend
+
+    def __call__(self, **filterparams):
+        filter_ = TxFilter(**filterparams)
+        return filter_.filter(self.backend.transactions(self.wid))
+
+
+class _ByHeight(object):
+    """A helper class used as key in sorting of payments by height.
+    Mempool goes on top, blockchain payments are ordered with descending block numbers.
+
+    **WARNING:** Integer sorting is reversed here.
+    """
+
+    def __init__(self, tx):
+        self.tx = tx
+
+    def _cmp(self, other):
+        sh = self.tx.inserted_at
+        oh = other.tx.inserted_at
+        if sh is oh is None:
+            return 0
+        if sh is None:
+            return 1
+        if oh is None:
+            return -1
+        return (sh > oh) - (sh < oh)
+
+    def __lt__(self, other):
+        return self._cmp(other) > 0
+
+    def __le__(self, other):
+        return self._cmp(other) >= 0
+
+    def __eq__(self, other):
+        return self._cmp(other) == 0
+
+    def __ge__(self, other):
+        return self._cmp(other) <= 0
+
+    def __gt__(self, other):
+        return self._cmp(other) < 0
+
+    def __ne__(self, other):
+        return self._cmp(other) != 0
+
+
+class TxFilter(object):
+    #
+    # Available filters:
+    # - txid
+    # - src_address
+    # - dest_address
+    # - min_epoch
+    # - max_epoch
+    # - min_slot
+    # - max_slot
+    # - min_block
+    # - max_block
+    # - confirmed
+    # - unconfirmed
+    #
+    def __init__(self, **filterparams):
+        self.min_epoch = filterparams.pop("min_epoch", None)
+        self.max_epoch = filterparams.pop("max_epoch", None)
+        self.min_slot = filterparams.pop("min_slot", None)
+        self.max_slot = filterparams.pop("max_slot", None)
+        self.min_absolute_slot = filterparams.pop("min_absolute_slot", None)
+        self.max_absolute_slot = filterparams.pop("max_absolute_slot", None)
+        self.min_block = filterparams.pop("min_block", None)
+        self.max_block = filterparams.pop("max_block", None)
+        self.unconfirmed = filterparams.pop("unconfirmed", False)
+        self.confirmed = filterparams.pop("confirmed", True)
+        _txid = filterparams.pop("txid", None)
+        _src_address = filterparams.pop("src_address", None)
+        _dest_address = filterparams.pop("dest_address", None)
+        if len(filterparams) > 0:
+            raise ValueError(
+                "Excessive arguments for payment query: {}".format(filterparams)
+            )
+        self._asks_chain_position = any(
+            map(
+                lambda x: x is not None,
+                (
+                    self.min_epoch,
+                    self.max_epoch,
+                    self.min_slot,
+                    self.max_slot,
+                    self.min_absolute_slot,
+                    self.max_absolute_slot,
+                    self.min_block,
+                    self.max_block,
+                ),
+            )
+        )
+        if self.unconfirmed and self._asks_chain_position:
+            warnings.warn(
+                "Blockchain position filtering ({max,min}_{epoch,slot,block}) has been "
+                "requested while also asking for transactions not in ledger. "
+                "These are mutually exclusive. "
+                "As mempool transactions have no height at all, they will be excluded "
+                "from the result.",
+                RuntimeWarning,
+            )
+        self.src_addresses = self._get_addrset(_src_address)
+        self.dest_addresses = self._get_addrset(_dest_address)
+        if _txid is None:
+            self.txids = []
+        else:
+            if isinstance(_txid, (bytes, str)):
+                txids = [_txid]
+            else:
+                try:
+                    iter(_txid)
+                    txids = _txid
+                except TypeError:
+                    txids = [_txid]
+            self.txids = list(map(validate_txid, txids))
+
+    def _get_addrset(self, addr):
+        if addr is None:
+            return set()
+        else:
+            if isinstance(addr, (str, bytes)):
+                addrs = [addr]
+            else:
+                try:
+                    iter(addr)
+                    addrs = addr
+                except TypeError:
+                    addrs = [addr]
+            return set(map(address, addrs))
+
+    def check(self, tx):
+        assert (tx.status == "in_ledger" and tx.inserted_at is not None) or (
+            tx.status != "in_ledger" and tx.inserted_at is None
+        )
+        ht = tx.inserted_at
+        if ht is None:
+            if not self.unconfirmed:
+                return False
+            if self._asks_chain_position:
+                # mempool txns are filtered out if any height range check is present
+                return False
+        else:
+            if not self.confirmed:
+                return False
+            if self.min_epoch is not None and ht.epoch < self.min_epoch:
+                return False
+            if self.max_epoch is not None and ht > self.max_epoch:
+                return False
+            if self.min_slot is not None and ht.slot < self.min_slot:
+                return False
+            if self.max_slot is not None and ht > self.max_slot:
+                return False
+            if (
+                self.min_absolute_slot is not None
+                and ht.absolute_slot < self.min_absolute_slot
+            ):
+                return False
+            if self.max_absolute_slot is not None and ht > self.max_absolute_slot:
+                return False
+            if self.min_block is not None and ht.block < self.min_block:
+                return False
+            if self.max_block is not None and ht > self.max_block:
+                return False
+        if self.txids and tx.txid not in self.txids:
+            return False
+        srcs = set(filter(operator.attrgetter("address"), tx.inputs))
+        dests = set(filter(operator.attrgetter("address"), tx.inputs))
+        if self.src_addresses and not self.src_addresses.intersection(srcs):
+            return False
+        if self.dest_addresses and not self.dest_addresses.intersection(dests):
+            return False
+        return True
+
+    def filter(self, txns):
+        return sorted(filter(self.check, txns), key=_ByHeight)

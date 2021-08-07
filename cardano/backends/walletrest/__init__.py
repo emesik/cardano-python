@@ -218,6 +218,7 @@ class WalletREST(object):
                 (serializers.get_amount(w["amount"]), w["stake_address"])
                 for w in txd.get("withdrawals", [])
             ],
+            status=txd["status"],
             metadata=metadata,
         )
 
