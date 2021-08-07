@@ -6,7 +6,7 @@ from .address import Address, address
 from .metadata import Metadata
 from .numbers import as_ada
 
-__all__ = ("Transaction", "Input", "Output", "validate_txid", "TransactionManager")
+__all__ = ("Transaction", "Input", "Output", "validate_txid")
 
 
 class Transaction(object):
@@ -166,7 +166,9 @@ class _ByHeight(object):
             return 1
         if oh is None:
             return -1
-        return (sh > oh) - (sh < oh)
+        return (sh.absolute_slot > oh.absolute_slot) - (
+            sh.absolute_slot < oh.absolute_slot
+        )
 
     def __lt__(self, other):
         return self._cmp(other) > 0
@@ -197,8 +199,8 @@ class TxFilter(object):
     # - max_epoch
     # - min_slot
     # - max_slot
-    # - min_block
-    # - max_block
+    # - min_height
+    # - max_height
     # - confirmed
     # - unconfirmed
     #
@@ -209,8 +211,8 @@ class TxFilter(object):
         self.max_slot = filterparams.pop("max_slot", None)
         self.min_absolute_slot = filterparams.pop("min_absolute_slot", None)
         self.max_absolute_slot = filterparams.pop("max_absolute_slot", None)
-        self.min_block = filterparams.pop("min_block", None)
-        self.max_block = filterparams.pop("max_block", None)
+        self.min_height = filterparams.pop("min_height", None)
+        self.max_height = filterparams.pop("max_height", None)
         self.unconfirmed = filterparams.pop("unconfirmed", False)
         self.confirmed = filterparams.pop("confirmed", True)
         _txid = filterparams.pop("txid", None)
@@ -230,8 +232,8 @@ class TxFilter(object):
                     self.max_slot,
                     self.min_absolute_slot,
                     self.max_absolute_slot,
-                    self.min_block,
-                    self.max_block,
+                    self.min_height,
+                    self.max_height,
                 ),
             )
         )
@@ -289,22 +291,25 @@ class TxFilter(object):
                 return False
             if self.min_epoch is not None and ht.epoch < self.min_epoch:
                 return False
-            if self.max_epoch is not None and ht > self.max_epoch:
+            if self.max_epoch is not None and ht.epoch > self.max_epoch:
                 return False
             if self.min_slot is not None and ht.slot < self.min_slot:
                 return False
-            if self.max_slot is not None and ht > self.max_slot:
+            if self.max_slot is not None and ht.slot > self.max_slot:
                 return False
             if (
                 self.min_absolute_slot is not None
                 and ht.absolute_slot < self.min_absolute_slot
             ):
                 return False
-            if self.max_absolute_slot is not None and ht > self.max_absolute_slot:
+            if (
+                self.max_absolute_slot is not None
+                and ht.absolute_slot > self.max_absolute_slot
+            ):
                 return False
-            if self.min_block is not None and ht.block < self.min_block:
+            if self.min_height is not None and ht.height < self.min_height:
                 return False
-            if self.max_block is not None and ht > self.max_block:
+            if self.max_height is not None and ht.height > self.max_height:
                 return False
         if self.txids and tx.txid not in self.txids:
             return False
