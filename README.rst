@@ -1,14 +1,10 @@
 Python Cardano module
 =====================
 
-**This software is in early development phase. Please consider it experimental and don't rely on any
-API to be stable in the future.**
+**This software is in development phase. Please consider it experimental and don't rely on any
+API to be stable before version 1.0 comes.**
 
-There's release 0.6 available for those brave enough to try it.
-
-This module is the implementation of `the idea`_ submitted to Catalyst Project.
-
-.. _`the idea`: https://cardano.ideascale.com/a/dtd/Python-module/333770-48088
+There's release 0.6.1 available for those brave enough to try it.
 
 Prerequisites
 -------------
@@ -25,6 +21,10 @@ the Cardano *testnet* for any software development and testing.
 
 Roadmap
 -------
+
+This module is the implementation of `the idea`_ submitted to Catalyst Project.
+
+.. _`the idea`: https://cardano.ideascale.com/a/dtd/Python-module/333770-48088
 
 +------------+---------+--------------------------------------------------------------------------+
 | date       | version | features                                                                 |
@@ -52,16 +52,15 @@ Roadmap
 | 2021-05-17 | 0.6     | - UTXO stats                                                             |
 |            |         | - docs for 0.5 + 0.6 features                                            |
 +------------+---------+--------------------------------------------------------------------------+
-| 2021-06-XX |         | - advanced filtering of incoming and outgoing transfers                  |
-|            |         | - address validation                                                     |
+| 2021-08-10 | 0.7     | - advanced filtering of incoming and outgoing transfers                  |
+|            |         | - native assets transfer                                                 |
 +------------+---------+--------------------------------------------------------------------------+
 |            |         | **End of the Catalyst-funded phase**                                     |
 +------------+---------+--------------------------------------------------------------------------+
-| future     |         | - native assets transfer                                                 |
+| future     |         | - address validation                                                     |
 |            |         | - key operations (HD wallet key generation)                              |
 |            |         | - seed to key and vice versa conversion                                  |
 |            |         | - coin selection                                                         |
-|            |         | - advanced filtering of incoming and outgoing transfers                  |
 |            |         | - transaction forgetting                                                 |
 |            |         | - handling of Byron wallets                                              |
 |            |         | - Goguen features (smart contracts?)                                     |

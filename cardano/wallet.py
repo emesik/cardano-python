@@ -1,5 +1,6 @@
 from .address import Address
 from .simpletypes import StakePoolInfo
+from .transaction import TransactionManager
 from . import exceptions
 
 
@@ -68,6 +69,7 @@ class Wallet(object):
         self.passphrase = passphrase or self.passphrase
         if not self.backend.wallet_exists(wid):
             raise ValueError("Wallet of id '{:s}' doesn't exist.".format(wid))
+        self.transactions = TransactionManager(self.wid, self.backend)
 
     def sync_progress(self):
         """
@@ -124,19 +126,6 @@ class Wallet(object):
         later on, using the mnemonic phrase.
         """
         return self.backend.delete_wallet(self.wid)
-
-    def transactions(self):  # , start=None, end=None, order="ascending"):
-        """
-        Returns the list of all wallet's :class:`Transactions <cardano.transaction.Transaction>`.
-        """
-        # WARNING: parameters don't really work; this is a known bug
-        # if start:
-        #    start = start.astimezone(tz=timezone.utc)
-        # if end:
-        #    end = end.astimezone(tz=timezone.utc)
-        return self.backend.transactions(
-            self.wid
-        )  # , start=start, end=end, order=order)
 
     def _resolve_passphrase(self, passphrase):
         passphrase = passphrase or self.passphrase
