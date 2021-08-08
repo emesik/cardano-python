@@ -4,7 +4,8 @@ Python Cardano module
 **This software is in development phase. Please consider it experimental and don't rely on any
 API to be stable before version 1.0 comes.**
 
-There's release 0.6.1 available for those brave enough to try it.
+There's release 0.7 available. It is usable but more advanced features haven't been well tested
+yet.
 
 Prerequisites
 -------------
@@ -52,7 +53,7 @@ This module is the implementation of `the idea`_ submitted to Catalyst Project.
 | 2021-05-17 | 0.6     | - UTXO stats                                                             |
 |            |         | - docs for 0.5 + 0.6 features                                            |
 +------------+---------+--------------------------------------------------------------------------+
-| 2021-08-10 | 0.7     | - advanced filtering of incoming and outgoing transfers                  |
+| 2021-08-08 | 0.7     | - advanced filtering of incoming and outgoing transfers                  |
 |            |         | - native assets transfer                                                 |
 +------------+---------+--------------------------------------------------------------------------+
 |            |         | **End of the Catalyst-funded phase**                                     |
