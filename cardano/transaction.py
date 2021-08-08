@@ -254,11 +254,8 @@ class TxFilter(object):
             if isinstance(_txid, (bytes, str)):
                 txids = [_txid]
             else:
-                try:
-                    iter(_txid)
-                    txids = _txid
-                except TypeError:
-                    txids = [_txid]
+                iter(_txid)
+                txids = _txid
             self.txids = list(map(validate_txid, txids))
 
     def _get_addrset(self, addr):
