@@ -1,16 +1,24 @@
 from decimal import Decimal
-import operator
 import unittest
 
 from cardano.simpletypes import BlockPosition
-from cardano.transaction import Transaction, Input, Output, TxFilter
+from cardano.transaction import Transaction, Input, Output, TxFilter, validate_txid
 
 
-class TransactionArgsTestCase(unittest.TestCase):
+class BasicTransactionTests(unittest.TestCase):
+    def test_txid_validator_error(self):
+        self.assertRaises(ValueError, validate_txid, "abc")
+        self.assertRaises(TypeError, validate_txid, None)
+        self.assertRaises(TypeError, validate_txid, [])
+
     def test_simple(self):
         tx = Transaction(
             txid="0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264"
         )
+        self.assertEqual("{}".format(tx),
+                "<Cardano tx: 0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264>")
+        self.assertEqual("{:s}".format(tx),
+                "<Cardano tx: 0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264>")
         self.assertEqual(tx.amount_in, 0)
         self.assertEqual(tx.amount_out, 0)
         self.assertIsNone(tx.fee)
@@ -67,7 +75,7 @@ class TransactionArgsTestCase(unittest.TestCase):
         self.assertEqual(tx.amount_out, Decimal("0"))
 
 
-class TransactionIOTestCase(unittest.TestCase):
+class TransactionIOTests(unittest.TestCase):
     def test_amount_calculation_outgoing(self):
         inputs = (
             Input(

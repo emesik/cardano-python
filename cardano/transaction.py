@@ -65,6 +65,12 @@ class Transaction(object):
             self.metadata if self.metadata is not None else Metadata()
         )
 
+    def __repr__(self):
+        return "<Cardano tx: {:s}>".format(self.txid)
+
+    def __format__(self, spec):
+        return format(str(self), spec)
+
     @property
     def local_inputs_sum(self):
         return as_ada(sum(map(operator.attrgetter("amount"), self.local_inputs)))
