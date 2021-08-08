@@ -134,12 +134,54 @@ class TransactionIOTestCase(unittest.TestCase):
 class TestFilter(unittest.TestCase):
     def setUp(self):
         self.txset = [
+            # mempool
+            Transaction(
+                txid="52e9167c6292f74b08c9a6e8e9c1f68220ad1d08a404b6f906c51e67bea4699c",
+                status="pending",
+                inputs = (
+                    Input(
+                        "0000000000000000000000000000000000000000000000000000000000000000",
+                        "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+                        Decimal(100),
+                    ),
+                ),
+                outputs = (
+                    # this is a change output
+                    Output(
+                        "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
+                        Decimal(30),
+                    ),
+                    # this is a real outgoing output
+                    Output(
+                        "addr_test1qpyppguxp7vlr77eywsvx9f9l0w07fkx7echm0wldaud9ucxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flkns8556zj",
+                        Decimal(69),
+                    ),
+                )
+            ),
+            # in ledger
             Transaction(
                 txid="1f2f3c0bb8bffe6b01c7dd15255b9d125e1e72c630c4f13f2d96e055c364349b",
                 inserted_at=BlockPosition(
                     epoch=123, slot=140937, absolute_slot=22907337, height=2458048
                 ),
                 status="in_ledger",
+                inputs = (
+                    Input(
+                        "0000000000000000000000000000000000000000000000000000000000000000",
+                        "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
+                        Decimal(100),
+                    ),
+                ),
+                outputs = (
+                    Output(
+                        "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+                        Decimal(30),
+                    ),
+                    Output(
+                        "addr_test1qpyppguxp7vlr77eywsvx9f9l0w07fkx7echm0wldaud9ucxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flkns8556zj",
+                        Decimal(69),
+                    ),
+                ),
             ),
             # the following two share the same block
             Transaction(
@@ -174,10 +216,6 @@ class TestFilter(unittest.TestCase):
             # mempool
             Transaction(
                 txid="7000bceff12b142009d6967259bddfb93afea9c3d1bfac7cc3a0306785c24ee8",
-                status="pending",
-            ),
-            Transaction(
-                txid="52e9167c6292f74b08c9a6e8e9c1f68220ad1d08a404b6f906c51e67bea4699c",
                 status="pending",
             ),
         ]
@@ -225,6 +263,40 @@ class TestFilter(unittest.TestCase):
                 "ad39ce00981de18919933d39576f80c0cbc1f5b20ef9e1ecbaa454873d8b6828",
                 "1f2f3c0bb8bffe6b01c7dd15255b9d125e1e72c630c4f13f2d96e055c364349b",
             ]
+        ).filter(self.txset)
+        self.assertEqual(len(filtered), 2)
+
+    def test_src_addr(self):
+        filtered = TxFilter(
+            src_addr="addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+            unconfirmed=True
+        ).filter(self.txset)
+        self.assertEqual(len(filtered), 1)
+
+    def test_src_addrs(self):
+        filtered = TxFilter(
+            src_addr=[
+                "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+                "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
+            ],
+            unconfirmed=True
+        ).filter(self.txset)
+        self.assertEqual(len(filtered), 2)
+
+    def test_dest_addr(self):
+        filtered = TxFilter(
+            dest_addr="addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+            unconfirmed=True
+        ).filter(self.txset)
+        self.assertEqual(len(filtered), 1)
+
+    def test_dest_addrs(self):
+        filtered = TxFilter(
+            dest_addr=[
+                "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
+                "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
+            ],
+            unconfirmed=True
         ).filter(self.txset)
         self.assertEqual(len(filtered), 2)
 

@@ -222,14 +222,10 @@ class WalletREST(object):
             metadata=metadata,
         )
 
-    def transactions(self, wid, start=None, end=None, order="ascending"):
+    def transactions(self, wid):
         data = {
-            "order": order,
+            "order": "ascending"
         }
-        if start is not None:
-            data["start"] = start.isoformat(timespec="seconds")
-        if end is not None:
-            data["end"] = end.isoformat(timespec="seconds")
         return [
             self._txdata2tx(txd, addresses=self._addresses_set(wid))
             for txd in self.raw_request(

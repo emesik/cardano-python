@@ -193,8 +193,8 @@ class TxFilter(object):
     #
     # Available filters:
     # - txid
-    # - src_address
-    # - dest_address
+    # - src_addr
+    # - dest_addr
     # - min_epoch
     # - max_epoch
     # - min_slot
@@ -216,8 +216,8 @@ class TxFilter(object):
         self.unconfirmed = filterparams.pop("unconfirmed", False)
         self.confirmed = filterparams.pop("confirmed", True)
         _txid = filterparams.pop("txid", None)
-        _src_address = filterparams.pop("src_address", None)
-        _dest_address = filterparams.pop("dest_address", None)
+        _src_addr = filterparams.pop("src_addr", None)
+        _dest_addr = filterparams.pop("dest_addr", None)
         if len(filterparams) > 0:
             raise ValueError(
                 "Excessive arguments for payment query: {}".format(filterparams)
@@ -246,8 +246,8 @@ class TxFilter(object):
                 "from the result.",
                 RuntimeWarning,
             )
-        self.src_addresses = self._get_addrset(_src_address)
-        self.dest_addresses = self._get_addrset(_dest_address)
+        self.src_addrs = self._get_addrset(_src_addr)
+        self.dest_addrs = self._get_addrset(_dest_addr)
         if _txid is None:
             self.txids = []
         else:
@@ -310,11 +310,11 @@ class TxFilter(object):
                 return False
         if self.txids and tx.txid not in self.txids:
             return False
-        srcs = set(filter(operator.attrgetter("address"), tx.inputs))
-        dests = set(filter(operator.attrgetter("address"), tx.inputs))
-        if self.src_addresses and not self.src_addresses.intersection(srcs):
+        srcs = set(filter(None, map(operator.attrgetter("address"), tx.inputs)))
+        dests = set(filter(None, map(operator.attrgetter("address"), tx.inputs)))
+        if self.src_addrs and not self.src_addrs.intersection(srcs):
             return False
-        if self.dest_addresses and not self.dest_addresses.intersection(dests):
+        if self.dest_addrs and not self.dest_addrs.intersection(dests):
             return False
         return True
 
