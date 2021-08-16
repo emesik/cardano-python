@@ -56,7 +56,7 @@ the entire blockchain for transaction history.
 Balance tuple
 ~~~~~~~~~~~~~
 
-The balance returned by ``wal.balance()`` (or methods that refer to native assets) is a subclass of
+The balance returned by ``wal.balance()`` (as well as balances of native assets) is a subclass of
 ``collections.namedtuple``. It consists of three elements:
 
 0. ``total`` — indicating the total amount of funds in the wallet, without going into too much
@@ -120,7 +120,7 @@ This is a trivial operation:
     In [6]: wal.delete()
 
 After that, if you try to use the wallet object again, the
-:doc:`cardano.backends.walletrest.exceptions.NotFound` exception will be raised.
+:class:`cardano.backends.walletrest.exceptions.NotFound` exception will be raised.
 
 API reference
 -------------

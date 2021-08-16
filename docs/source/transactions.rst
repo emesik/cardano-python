@@ -29,6 +29,69 @@ Retrieving the history of the wallet is pretty straightforward:
 As you probably noticed, the amounts are given in ADA as Python ``Decimal`` type, which is perfect
 for monetary operations.
 
+Narrowing down the query
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to limit the number of results you may ask for transactions meeting special criteria.
+
+The most important, perhaps, is the ``txid`` argument which accepts single IDs as well as sequences
+thereof. So, both
+
+.. code-block:: python
+
+    wal.transactions(txid="0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264")
+
+as well as 
+
+.. code-block:: python
+
+    wal.transactions(txid=[
+        "0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264",
+        "88633270f854eea5b2f35a863d748b294299deecf62ec9629ff08fca87fff45c"]
+        )
+
+are valid queries.
+
+Blockchain position
+...................
+
+The transaction filter accepts parameters filtering against the position in the ledger.
+``min_epoch``, ``max_epoch``, ``min_slot``, ``max_slot``, ``min_absolute_slot``,
+``max_absolute_slot``, ``min_height`` and ``max_height`` can be used and combined.
+
+Ranges combining different criteria may be applied in the same call, e.g. to ask only for the
+first 10 slots of epoch 230 would be
+
+.. code-block:: python
+
+    wal.transactions(min_epoch=230, max_epoch=230, max_slot=10)
+
+Because both epochs and slots are precisely defined periods of time, querying for them
+is like asking for quite precise timestamp of mining of the transaction's block. In contrast,
+asking for height considers the actual number of blocks since the genesis, as not all slots
+have been used to generate a block.
+
+Mempool
+.......
+
+Even though the mempool life part of Cardano transactions is usually very short, it is possible to
+ask for transactions not in ledger, as well as to exclude them from the results.
+
+To include mempool, use ``unconfirmed=True``. To include mined transactions, use
+``confirmed=True``. ``False`` values exclude these types of transactions from the results.
+
+By default, ``unconfirmed=False`` and ``confirmed=True`` which means the default settings ask only
+for transactions in the ledger.
+
+Filtering by address
+....................
+
+Arguments ``src_addr`` and ``dest_addr`` filter for source and destination addresses, respectively.
+They can be used to ask for single or multiple addresses, just like ``txid`` described above.
+
+.. note:: Please be aware that this kind of query is not very reliable. ``cardano-wallet`` is known
+    to return incomplete input/output data, missing the address info.
+
 Spending funds
 --------------
 

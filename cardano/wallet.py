@@ -185,7 +185,9 @@ class Wallet(object):
         Sends multiple transfers from the wallet. Returns the resulting transaction.
 
         :param destinations: a list of :class:`Address <cardano.address.Address>` and amount
-                    pairs ``[(address, amount), ...]``
+                    pairs ``[(address, amount), ...]`` or triples where the third element is
+                    a sequence of :class:`AssetID <cardano.simpletypes.AssetID>` and quantity
+                    pairs
         :param metadata: metadata to be sent, as :class:`Metadata <cardano.metadata.Metadata>`
                     instance od ``dict`` mapping ``int`` keys to values of acceptable types
         :param allow_withdrawal: Allow withdrawing staking rewards to cover the transaction amount
