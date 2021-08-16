@@ -232,6 +232,8 @@ class TxFilter(object):
     # - max_epoch
     # - min_slot
     # - max_slot
+    # - min_absolute_slot
+    # - max_absolute_slot
     # - min_height
     # - max_height
     # - confirmed

@@ -152,11 +152,11 @@ class WalletREST(object):
             raise exceptions.NotSupported("Extra assets are not supported")
         assets = {}
         for ast in bdata["total"]:
-            aid = AssetID(unhexlify(ast["asset_name"]), ast["policy_id"])
+            aid = AssetID(ast["asset_name"], ast["policy_id"])
             assets[aid] = assets[aid] if aid in assets else {}
             assets[aid]["total"] = ast["quantity"]
         for ast in bdata["available"]:
-            aid = AssetID(unhexlify(ast["asset_name"]), ast["policy_id"])
+            aid = AssetID(ast["asset_name"], ast["policy_id"])
             assets[aid] = assets[aid] if aid in assets else {}
             assets[aid]["available"] = ast["quantity"]
         return {

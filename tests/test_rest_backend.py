@@ -102,13 +102,28 @@ class TestSinglewallet(JSONTestCase):
         self.assertIsInstance(wallet, Wallet)
         self.assertEqual(wallet.wid, "eff9cc89621111677a501493ace8c3f05608c0ce")
         assets = wallet.assets()
-        self.assertEqual(len(assets), 1)
-        self.assertEqual(
-            list(assets.keys())[0],
-            ":6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7",
-        )
-        self.assertEqual(list(assets.values())[0].available, 2)
-        self.assertEqual(list(assets.values())[0].total, 2)
+        self.assertEqual(len(assets), 14)
+        exp_assets = {
+            AssetID("6c6f766164616e6674", "0c306361512844fbdb83294f278937c04af6e56ab1d94d2dd187d725"),
+            AssetID("6c6f766164616e6674", "0f5e9e9143f4eb0317584aa295d0d2dc9741edfdbbe1af64f241aa32"),
+            AssetID("6c6f766164616e6674", "19b5961ad59574e2eb90d80894bbca8b51b7e2fbfe8ac649697c1255"),
+            AssetID("6c6f766164616e6674", "1c088dec595714fb23d3eb806dcffaaaec8c275b502e2cc047026012"),
+            AssetID("6c6f766164616e6674", "2efcadf7209b422c7742c1b1ceb8b82cfd6ae6b099226bc195daddfa"),
+            AssetID("6c6f766164616e6674", "57fbec4da0c525282f50f2ff2567ecb529c276ea972dd31a1e1d8e41"),
+            AssetID("6c6f766164616e6674", "618e9db244d4832faf1bd937a423f3f8aea558bed396f74fa82f8fea"),
+            AssetID("6c6f766164616e6674", "6604684337b45547a5fdfb418c6ad140aba3d02e65b0bb0dc3c492a1"),
+            AssetID("6c6f766164616e6674", "68bf925a392af499964003a5caaef10edd1ceac7d2c08e7bd7b287d0"),
+            AssetID("6c6f766164616e6674", "73d4f77b57be5bbdf7c7cb475662083a4111f6e018cffb056142f14e"),
+            AssetID("6c6f766164616e6674", "88c5393b19640c59611a73bf7ec7e7884fc228544a24b2e384d3ed32"),
+            AssetID("6c6f766164616e6674", "9dfc0ed69a98a12f97b6a74e6a41cfb9aecdc5883b2ecbf2f9d13672"),
+            AssetID("6c6f766164616e6674", "b03f3f89862ecb51522832535e525ec014c884e047f63acc786567bb"),
+            AssetID("6c6f766164616e6674", "dcb9bccdb63474aaa16f0ef041c59c582bbd85ad19cca7119ba5ea79"),
+        }
+        self.assertSetEqual(set(assets.keys()), exp_assets)
+        for asset_id, balance in assets.items():
+            self.assertEqual(balance.available, balance.total)
+            self.assertGreater(balance.total, 0)
+            self.assertIsNone(balance.reward)
 
     @responses.activate
     def test_list_addresses(self):
