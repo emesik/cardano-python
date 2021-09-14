@@ -197,6 +197,27 @@ class TestSinglewallet(JSONTestCase):
             )
 
     @responses.activate
+    def test_first_unused_address(self):
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce"),
+            json=self._read(
+                "test_first_unused_address-00-GET_wallets_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/eff9cc89621111677a501493ace8c3f05608c0ce/addresses"),
+            json=self._read(
+                "test_first_unused_address-10-GET_addresses_eff9cc89621111677a501493ace8c3f05608c0ce.json"
+            ),
+            status=200,
+        )
+        wallet = self.service.wallet("eff9cc89621111677a501493ace8c3f05608c0ce")
+        self.assertIsInstance(wallet.first_unused_address(), Address)
+
+    @responses.activate
     def test_list_addresses_with_usage(self):
         responses.add(
             responses.GET,

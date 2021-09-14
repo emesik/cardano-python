@@ -104,7 +104,7 @@ class Wallet(object):
         so multiple subsequent calls will return the same address if no transfer is received
         between them.
         """
-        return next(filter(lambda a: not a[1], self.addresses(with_usage=True)))[1]
+        return next(filter(lambda a: not a[1], self.addresses(with_usage=True)))[0]
 
     def balance(self):
         """
