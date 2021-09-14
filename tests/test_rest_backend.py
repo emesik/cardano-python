@@ -104,20 +104,62 @@ class TestSinglewallet(JSONTestCase):
         assets = wallet.assets()
         self.assertEqual(len(assets), 14)
         exp_assets = {
-            AssetID("6c6f766164616e6674", "0c306361512844fbdb83294f278937c04af6e56ab1d94d2dd187d725"),
-            AssetID("6c6f766164616e6674", "0f5e9e9143f4eb0317584aa295d0d2dc9741edfdbbe1af64f241aa32"),
-            AssetID("6c6f766164616e6674", "19b5961ad59574e2eb90d80894bbca8b51b7e2fbfe8ac649697c1255"),
-            AssetID("6c6f766164616e6674", "1c088dec595714fb23d3eb806dcffaaaec8c275b502e2cc047026012"),
-            AssetID("6c6f766164616e6674", "2efcadf7209b422c7742c1b1ceb8b82cfd6ae6b099226bc195daddfa"),
-            AssetID("6c6f766164616e6674", "57fbec4da0c525282f50f2ff2567ecb529c276ea972dd31a1e1d8e41"),
-            AssetID("6c6f766164616e6674", "618e9db244d4832faf1bd937a423f3f8aea558bed396f74fa82f8fea"),
-            AssetID("6c6f766164616e6674", "6604684337b45547a5fdfb418c6ad140aba3d02e65b0bb0dc3c492a1"),
-            AssetID("6c6f766164616e6674", "68bf925a392af499964003a5caaef10edd1ceac7d2c08e7bd7b287d0"),
-            AssetID("6c6f766164616e6674", "73d4f77b57be5bbdf7c7cb475662083a4111f6e018cffb056142f14e"),
-            AssetID("6c6f766164616e6674", "88c5393b19640c59611a73bf7ec7e7884fc228544a24b2e384d3ed32"),
-            AssetID("6c6f766164616e6674", "9dfc0ed69a98a12f97b6a74e6a41cfb9aecdc5883b2ecbf2f9d13672"),
-            AssetID("6c6f766164616e6674", "b03f3f89862ecb51522832535e525ec014c884e047f63acc786567bb"),
-            AssetID("6c6f766164616e6674", "dcb9bccdb63474aaa16f0ef041c59c582bbd85ad19cca7119ba5ea79"),
+            AssetID(
+                "6c6f766164616e6674",
+                "0c306361512844fbdb83294f278937c04af6e56ab1d94d2dd187d725",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "0f5e9e9143f4eb0317584aa295d0d2dc9741edfdbbe1af64f241aa32",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "19b5961ad59574e2eb90d80894bbca8b51b7e2fbfe8ac649697c1255",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "1c088dec595714fb23d3eb806dcffaaaec8c275b502e2cc047026012",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "2efcadf7209b422c7742c1b1ceb8b82cfd6ae6b099226bc195daddfa",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "57fbec4da0c525282f50f2ff2567ecb529c276ea972dd31a1e1d8e41",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "618e9db244d4832faf1bd937a423f3f8aea558bed396f74fa82f8fea",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "6604684337b45547a5fdfb418c6ad140aba3d02e65b0bb0dc3c492a1",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "68bf925a392af499964003a5caaef10edd1ceac7d2c08e7bd7b287d0",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "73d4f77b57be5bbdf7c7cb475662083a4111f6e018cffb056142f14e",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "88c5393b19640c59611a73bf7ec7e7884fc228544a24b2e384d3ed32",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "9dfc0ed69a98a12f97b6a74e6a41cfb9aecdc5883b2ecbf2f9d13672",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "b03f3f89862ecb51522832535e525ec014c884e047f63acc786567bb",
+            ),
+            AssetID(
+                "6c6f766164616e6674",
+                "dcb9bccdb63474aaa16f0ef041c59c582bbd85ad19cca7119ba5ea79",
+            ),
         }
         self.assertSetEqual(set(assets.keys()), exp_assets)
         for asset_id, balance in assets.items():
@@ -814,12 +856,8 @@ class TestDoublewallet(JSONTestCase):
             status=200,
         )
         super(TestDoublewallet, self).setUp()
-        self.wala = self.service.wallet(
-            self.wida, passphrase=self.passphrasea
-        )
-        self.walb = self.service.wallet(
-            self.widb, passphrase=self.passphraseb
-        )
+        self.wala = self.service.wallet(self.wida, passphrase=self.passphrasea)
+        self.walb = self.service.wallet(self.widb, passphrase=self.passphraseb)
 
     def _url(self, path):
         return "".join([self.service.backend.base_url, path])
@@ -854,7 +892,9 @@ class TestDoublewallet(JSONTestCase):
             responses.GET,
             self._url("wallets/{:s}/transactions".format(self.walb.wid)),
             json=self._read(
-                "test_transfer_asset-40-GET_transactions_{:s}.json".format(self.walb.wid)
+                "test_transfer_asset-40-GET_transactions_{:s}.json".format(
+                    self.walb.wid
+                )
             ),
             status=200,
         )
@@ -885,9 +925,9 @@ class TestDoublewallet(JSONTestCase):
         )
         self.assertEqual(tx_out.amount_in, 0)
         self.assertEqual(tx_out.amount_out, 2)
-        self.assertEqual(len(tx_out.inputs), 2)         # one with asset, one with fee
-        self.assertEqual(len(tx_out.local_inputs), 2)   # both are local
-        self.assertEqual(len(tx_out.outputs), 2)        # payment + change
+        self.assertEqual(len(tx_out.inputs), 2)  # one with asset, one with fee
+        self.assertEqual(len(tx_out.local_inputs), 2)  # both are local
+        self.assertEqual(len(tx_out.outputs), 2)  # payment + change
         self.assertEqual(len(tx_out.local_outputs), 1)  # change
 
         assetsa = self.wala.assets()
@@ -899,9 +939,9 @@ class TestDoublewallet(JSONTestCase):
         tx_in = self.walb.transactions()[0]
         self.assertEqual(tx_in.amount_in, 2)
         self.assertEqual(tx_in.amount_out, 0)
-        self.assertEqual(len(tx_in.inputs), 2)          # one with asset, one with fee
-        self.assertEqual(len(tx_in.local_inputs), 0)    # none are local
-        self.assertEqual(len(tx_in.outputs), 2)         # payment + change
-        self.assertEqual(len(tx_in.local_outputs), 1)   # payment
+        self.assertEqual(len(tx_in.inputs), 2)  # one with asset, one with fee
+        self.assertEqual(len(tx_in.local_inputs), 0)  # none are local
+        self.assertEqual(len(tx_in.outputs), 2)  # payment + change
+        self.assertEqual(len(tx_in.local_outputs), 1)  # payment
 
         assetsb = self.walb.assets()

@@ -15,10 +15,14 @@ class BasicTransactionTests(unittest.TestCase):
         tx = Transaction(
             txid="0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264"
         )
-        self.assertEqual("{}".format(tx),
-                "<Cardano tx: 0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264>")
-        self.assertEqual("{:s}".format(tx),
-                "<Cardano tx: 0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264>")
+        self.assertEqual(
+            "{}".format(tx),
+            "<Cardano tx: 0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264>",
+        )
+        self.assertEqual(
+            "{:s}".format(tx),
+            "<Cardano tx: 0b048162778e29e98d833d948a3be7f18f9ce8693d7ee407c7d38b6ef2a5a264>",
+        )
         self.assertEqual(tx.amount_in, 0)
         self.assertEqual(tx.amount_out, 0)
         self.assertIsNone(tx.fee)
@@ -146,14 +150,14 @@ class TestFilter(unittest.TestCase):
             Transaction(
                 txid="52e9167c6292f74b08c9a6e8e9c1f68220ad1d08a404b6f906c51e67bea4699c",
                 status="pending",
-                inputs = (
+                inputs=(
                     Input(
                         "0000000000000000000000000000000000000000000000000000000000000000",
                         "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
                         Decimal(100),
                     ),
                 ),
-                outputs = (
+                outputs=(
                     # this is a change output
                     Output(
                         "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
@@ -164,7 +168,7 @@ class TestFilter(unittest.TestCase):
                         "addr_test1qpyppguxp7vlr77eywsvx9f9l0w07fkx7echm0wldaud9ucxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flkns8556zj",
                         Decimal(69),
                     ),
-                )
+                ),
             ),
             # in ledger
             Transaction(
@@ -173,14 +177,14 @@ class TestFilter(unittest.TestCase):
                     epoch=123, slot=140937, absolute_slot=22907337, height=2458048
                 ),
                 status="in_ledger",
-                inputs = (
+                inputs=(
                     Input(
                         "0000000000000000000000000000000000000000000000000000000000000000",
                         "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
                         Decimal(100),
                     ),
                 ),
-                outputs = (
+                outputs=(
                     Output(
                         "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
                         Decimal(30),
@@ -277,7 +281,7 @@ class TestFilter(unittest.TestCase):
     def test_src_addr(self):
         filtered = TxFilter(
             src_addr="addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
-            unconfirmed=True
+            unconfirmed=True,
         ).filter(self.txset)
         self.assertEqual(len(filtered), 1)
 
@@ -287,14 +291,14 @@ class TestFilter(unittest.TestCase):
                 "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
                 "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
             ],
-            unconfirmed=True
+            unconfirmed=True,
         ).filter(self.txset)
         self.assertEqual(len(filtered), 2)
 
     def test_dest_addr(self):
         filtered = TxFilter(
             dest_addr="addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
-            unconfirmed=True
+            unconfirmed=True,
         ).filter(self.txset)
         self.assertEqual(len(filtered), 1)
 
@@ -304,7 +308,7 @@ class TestFilter(unittest.TestCase):
                 "addr_test1qqr585tvlc7ylnqvz8pyqwauzrdu0mxag3m7q56grgmgu7sxu2hyfhlkwuxupa9d5085eunq2qywy7hvmvej456flknswgndm3",
                 "addr_test1qqd86dlwasc5kwe39m0qvu4v6krd24qek0g9pv9f2kq9x28d56vd3zqzthdaweyrktfm3h5cz4je9h5j6s0f24pryswqgepa9e",
             ],
-            unconfirmed=True
+            unconfirmed=True,
         ).filter(self.txset)
         self.assertEqual(len(filtered), 2)
 

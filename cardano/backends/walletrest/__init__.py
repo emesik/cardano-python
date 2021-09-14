@@ -225,9 +225,7 @@ class WalletREST(object):
         )
 
     def transactions(self, wid):
-        data = {
-            "order": "ascending"
-        }
+        data = {"order": "ascending"}
         return [
             self._txdata2tx(txd, addresses=self._addresses_set(wid))
             for txd in self.raw_request(

@@ -95,23 +95,23 @@ class Transaction(object):
             )
         )
 
-#    @property
-#    def assets(self):
-#        _assets = collections.defaultdict(int)
-#        print("i")
-#        for inp in self.inputs:
-#            print(inp.assets)
-#            for aid, aqty in inp.assets:
-#                _assets[aid] += -aqty if inp in self.local_inputs else aqty
-#                print(dict(_assets))
-#        print("o")
-#        for outp in self.outputs:
-#            print(outp.assets)
-#            for aid, aqty in outp.assets:
-#                print(outp in self.local_outputs)
-#                _assets[aid] += aqty if outp in self.local_outputs else -aqty
-#                print(dict(_assets))
-#        return dict(_assets)
+    #    @property
+    #    def assets(self):
+    #        _assets = collections.defaultdict(int)
+    #        print("i")
+    #        for inp in self.inputs:
+    #            print(inp.assets)
+    #            for aid, aqty in inp.assets:
+    #                _assets[aid] += -aqty if inp in self.local_inputs else aqty
+    #                print(dict(_assets))
+    #        print("o")
+    #        for outp in self.outputs:
+    #            print(outp.assets)
+    #            for aid, aqty in outp.assets:
+    #                print(outp in self.local_outputs)
+    #                _assets[aid] += aqty if outp in self.local_outputs else -aqty
+    #                print(dict(_assets))
+    #        return dict(_assets)
 
     def hash(self):
         return self.txid
