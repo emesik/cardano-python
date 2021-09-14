@@ -788,18 +788,37 @@ class TestSinglewallet(JSONTestCase):
 
 class TestDoublewallet(JSONTestCase):
     service = None
+    wida = "04aebef49c24086f603db7a6d157f915c5c9411a"
+    widb = "5e27c10c9cb253c93a771732fd7dcbb56d34bc47"
     passphrasea = "pass.12345678"
     passphraseb = "pass.87654321"
     data_subdir = "test_rest_backend"
 
+    @responses.activate
     def setUp(self):
-        super(TestDoublewallet, self).setUp()
         self.service = WalletService(WalletREST())
+        responses.add(
+            responses.GET,
+            self._url("wallets/{:s}".format(self.wida)),
+            json=self._read(
+                "test_transfer_asset-30-GET_wallets_{:s}.json".format(self.wida)
+            ),
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            self._url("wallets/{:s}".format(self.widb)),
+            json=self._read(
+                "test_transfer_asset-60-GET_wallets_{:s}.json".format(self.widb)
+            ),
+            status=200,
+        )
+        super(TestDoublewallet, self).setUp()
         self.wala = self.service.wallet(
-            "04aebef49c24086f603db7a6d157f915c5c9411a", passphrase=self.passphrasea
+            self.wida, passphrase=self.passphrasea
         )
         self.walb = self.service.wallet(
-            "5e27c10c9cb253c93a771732fd7dcbb56d34bc47", passphrase=self.passphraseb
+            self.widb, passphrase=self.passphraseb
         )
 
     def _url(self, path):
