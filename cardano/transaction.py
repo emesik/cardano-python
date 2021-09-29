@@ -140,7 +140,7 @@ class Input(IOBase):
 
     def __init__(self, iid=None, address=None, amount=None, assets=None):
         super(Input, self).__init__(address=address, amount=amount, assets=assets)
-        self.id = iid
+        self.iid = iid
 
 
 class Output(IOBase):
