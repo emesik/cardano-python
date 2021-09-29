@@ -4,7 +4,7 @@ Python Cardano module
 **This software is in development phase. Please consider it experimental and don't rely on any
 API to be stable before version 1.0 comes.**
 
-There's release 0.7.2 available. It is usable but more advanced features haven't been well tested
+There's release 0.7.3 available. It is usable but more advanced features haven't been well tested
 yet.
 
 Prerequisites
