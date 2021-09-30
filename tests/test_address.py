@@ -7,7 +7,6 @@ from cardano.address import (
     IcarusAddress,
     ShelleyAddress,
 )
-from cardano.consts import Era
 
 from .example_addresses import (
     GENERAL_ERR,

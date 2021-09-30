@@ -1,4 +1,3 @@
-from binascii import hexlify, unhexlify
 from decimal import Decimal
 import json
 import logging

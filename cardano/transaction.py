@@ -1,4 +1,3 @@
-import collections
 import operator
 import re
 import warnings
