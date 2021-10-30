@@ -11,4 +11,5 @@ docs/build/*
 venv
 build/
 dist/
+htmlcov/
 *.egg-info/

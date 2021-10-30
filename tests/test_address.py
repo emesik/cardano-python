@@ -20,11 +20,9 @@ from .example_addresses import (
 
 
 class BaseTestAddressOK(object):
-    address_list = None
-    AddressClass = None
-
     def test_address(self):
         for addr in self.address_list:
+            addrobj = self.AddressClass(addr)
             addrobj = address(addr)
             self.assertIsInstance(addrobj, self.AddressClass)
 
@@ -44,9 +42,44 @@ class TestShelleyAddressOK(BaseTestAddressOK, unittest.TestCase):
     AddressClass = ShelleyAddress
 
 
-class TestAddressERR(unittest.TestCase):
+class BaseTestAddressERR(object):
+    address_list = set()
+
     def test_address(self):
-        for addr in GENERAL_ERR + BYRON_ERR + ICARUS_ERR + SHELLEY_ERR:
+        for addr in self.address_list:
+            with self.assertRaises(ValueError):
+                a = address(addr)
+                # FIXME: hack to present verbose error messages when exception is NOT raised
+                raise AssertionError(
+                    '{:s} did not raise ValueError and returned "{}" of type {}'.format(
+                        addr, a, type(a)
+                    )
+                )
+
+
+class TestGeneralAddressERR(BaseTestAddressERR, unittest.TestCase):
+    address_list = GENERAL_ERR
+
+
+# class TestByronAddressERR(BaseTestAddressERR, unittest.TestCase):
+#    address_list = BYRON_ERR
+
+
+# class TestIcarusAddressERR(BaseTestAddressERR, unittest.TestCase):
+#    address_list = ICARUS_ERR
+
+
+class TestShelleyAddressERR(BaseTestAddressERR, unittest.TestCase):
+    address_list = SHELLEY_ERR
+
+
+class TestAutoRecognition(unittest.TestCase):
+    def test_valid(self):
+        for addr in SHELLEY_OK + BYRON_OK + ICARUS_OK:
+            address(addr)
+
+    def test_invalid(self):
+        for addr in GENERAL_ERR + SHELLEY_ERR:  # + BYRON_ERR + ICARUS_ERR:
             self.assertRaises(ValueError, address, addr)
 
 
