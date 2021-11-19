@@ -4,8 +4,8 @@ Python Cardano module
 **This software is in development phase. Please consider it experimental and don't rely on any
 API to be stable before version 1.0 comes.**
 
-There's release 0.8 available. It is usable but more advanced features haven't been well tested
-yet.
+There's release 0.8 available. It is usable for basic payment acceptance and spending but more
+advanced features haven't been well tested yet.
 
 Prerequisites
 -------------
@@ -23,9 +23,10 @@ the Cardano *testnet* for any software development and testing.
 Roadmap
 -------
 
-This module is the implementation of `the idea`_ submitted to Catalyst Project.
+This module has been started as `an idea`_ submitted to the Catalyst Project. The funded part
+concluded with version 0.7.
 
-.. _`the idea`: https://cardano.ideascale.com/a/dtd/Python-module/333770-48088
+.. _`an idea`: https://cardano.ideascale.com/a/dtd/Python-module/333770-48088
 
 +------------+---------+--------------------------------------------------------------------------+
 | date       | version | features                                                                 |
@@ -58,8 +59,9 @@ This module is the implementation of `the idea`_ submitted to Catalyst Project.
 +------------+---------+--------------------------------------------------------------------------+
 |            |         | **End of the Catalyst-funded phase**                                     |
 +------------+---------+--------------------------------------------------------------------------+
-| future     |         | - address validation                                                     |
-|            |         | - key operations (HD wallet key generation)                              |
+| 2021-11-11 | 0.8     | - address validation                                                     |
++------------+---------+--------------------------------------------------------------------------+
+| future     |         | - key operations (HD wallet key generation)                              |
 |            |         | - seed to key and vice versa conversion                                  |
 |            |         | - coin selection                                                         |
 |            |         | - transaction forgetting                                                 |
@@ -80,7 +82,7 @@ Donate
 
 If you like to support the idea with a donation, the address is::
 
-    addr1qy5xfmuxy22h9c82h2fc96du769cyqptn45h9xhqkjwuh07y42xxcwu506y3czyjp00f66r9t2u5nrrunyu867f2fcmskzkcmp
+    addr1qyjfql20ca09dnxrl3zdek40u24ylk6uqw3rf7p42p55xk8r26ptv047efk8fwmydynvawp4af7fr0xgjxqm7x9v32eq27496t
 
 .. image:: donate.qr.png
 
