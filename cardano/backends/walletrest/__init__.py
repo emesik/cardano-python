@@ -33,6 +33,8 @@ class JSONWithDecimalEncoder(json.JSONEncoder):
 class WalletREST(object):
     base_url = None
     timeout = 10
+    verify=None
+    cert=None
 
     ERR2EXCEPTION = {
         403: {
@@ -45,13 +47,15 @@ class WalletREST(object):
         },
     }
 
-    def __init__(self, protocol="http", host="localhost", port=8090):
+    def __init__(self, protocol="http", host="localhost", port=8090, verify=None, cert=None):
         self.base_url = "{protocol}://{host}:{port}/v2/".format(
             protocol=protocol, host=host, port=port
         )
+        self.verify=verify
+        self.cert=cert
         _log.debug("WalletREST backend url: {:s}".format(self.base_url))
 
-    def raw_request(self, method, path, params=None):
+    def raw_request(self, method, path, params=None, verify=None, cert=None):
         url = "".join([self.base_url, path])
         hdr = {"Content-Type": "application/json"}
         params = params or {}
@@ -59,11 +63,13 @@ class WalletREST(object):
             u"{method} {url}\nParams:\n{params}".format(
                 method=method,
                 url=url,
+                verify=verify,
+                cert=cert,
                 params=json.dumps(params, indent=2, sort_keys=True),
             )
         )
         rsp = getattr(requests, method.lower())(
-            url, headers=hdr, data=json.dumps(params), timeout=self.timeout
+            url, headers=hdr, data=json.dumps(params), timeout=self.timeout, verify=self.verify, cert=self.cert
         )
         if rsp.status_code != 204:  # if content exists
             result = rsp.json(parse_float=Decimal)
