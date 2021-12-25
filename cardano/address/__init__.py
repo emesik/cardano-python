@@ -1,9 +1,7 @@
 import base58
 
 from ..consts import Era
-
-from .shelley import SHELLEY_ADDR_RE
-from . import bech32
+from .shelley import AddressDeserializer, SHELLEY_ADDR_RE
 
 
 def address(addr, wallet=None):
@@ -87,36 +85,13 @@ class IcarusAddress(ByronAddress):
 
 class ShelleyAddress(Address):
     era = Era.SHELLEY
+    network_tag = None
+    address_type = None
 
     def _validate(self):
-        hrp, payload32 = bech32.bech32_decode(self._address)
-        if not payload32:
-            raise ValueError(
-                "{:s} is not a valid Shelley address".format(self._address)
-            )
-        payload = bech32.convertbits(payload32, 5, 8, False)
-        addr_typ, net_tag = (payload[0] & 0xF0) >> 4, payload[0] & 0xF
-        if addr_typ > 7 and addr_typ < 0xE:
-            raise ValueError(
-                "Shelley address {:s} is of wrong type (0x{:x})".format(
-                    self._address, addr_typ
-                )
-            )
-        if net_tag not in (0, 1):
-            raise ValueError(
-                "Shelley address {:s} has unsupported net tag (0x{:x})".format(
-                    self._address, net_tag
-                )
-            )
-        if net_tag == 0 and not hrp.endswith("_test"):
-            raise ValueError(
-                'Shelley address {:s} has TESTNET tag but the prefix doesn\'t end with "_test"'.format(
-                    self._address
-                )
-            )
-        elif net_tag == 1 and hrp.endswith("_test"):
-            raise ValueError(
-                'Shelley address {:s} has MAINNET tag but the prefix ends with "_test"'.format(
-                    self._address
-                )
-            )
+        (
+            self.hrp,
+            self.network_tag,
+            self.address_type,
+            self.components,
+        ) = AddressDeserializer(self._address).deserialized()

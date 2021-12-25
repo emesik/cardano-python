@@ -27,9 +27,6 @@
 
 """Reference implementation for Bech32/Bech32m and segwit addresses."""
 
-
-from enum import Enum
-
 CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
 
 
