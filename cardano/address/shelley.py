@@ -71,8 +71,8 @@ class AddressType(enum.IntEnum):
     ScriptHash_Pointer = 5
     PaymentKeyHashOnly = 6
     ScriptHashOnly = 7
-    StakeKeyHash = 0xE
-    ScriptHash = 0xF
+    Stake_StakeKeyHash = 0xE
+    Stake_ScriptHash = 0xF
 
 
 class Hash(object):
@@ -124,8 +124,8 @@ class AddressDeserializer(object):
         AddressType.ScriptHash_Pointer: lambda l: l > 28,
         AddressType.PaymentKeyHashOnly: lambda l: l == 28,
         AddressType.ScriptHashOnly: lambda l: l == 28,
-        AddressType.StakeKeyHash: lambda l: l == 28,
-        AddressType.ScriptHash: lambda l: l == 28,
+        AddressType.Stake_StakeKeyHash: lambda l: l == 28,
+        AddressType.Stake_ScriptHash: lambda l: l == 28,
     }
     network_tag = None
     address_type = None

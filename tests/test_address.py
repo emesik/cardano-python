@@ -175,7 +175,7 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsInstance(addr.components[1], Pointer)
 
-    def test_mainnet_PaymentKeyHashOnly(self):
+    def test_mainnet_PaymentKeyHash(self):
         addr = ShelleyAddress(
             "addr1vx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzers66hrl8"
         )
@@ -185,7 +185,7 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsNone(addr.components[1])
 
-    def test_mainnet_ScriptHashOnly(self):
+    def test_mainnet_ScriptHash(self):
         addr = ShelleyAddress(
             "addr1w8phkx6acpnf78fuvxn0mkew3l0fd058hzquvz7w36x4gtcyjy7wx"
         )
@@ -195,23 +195,23 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsNone(addr.components[1])
 
-    def test_mainnet_StakeKeyHash(self):
+    def test_mainnet_Stake_StakeKeyHash(self):
         addr = ShelleyAddress(
             "stake1uyehkck0lajq8gr28t9uxnuvgcqrc6070x3k9r8048z8y5gh6ffgw"
         )
         self.assertEqual(addr.hrp, "stake")
         self.assertEqual(addr.network_tag, NetworkTag.MAINNET)
-        self.assertEqual(addr.address_type, AddressType.StakeKeyHash)
+        self.assertEqual(addr.address_type, AddressType.Stake_StakeKeyHash)
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsNone(addr.components[1])
 
-    def test_mainnet_ScriptHash(self):
+    def test_mainnet_Stake_ScriptHash(self):
         addr = ShelleyAddress(
             "stake178phkx6acpnf78fuvxn0mkew3l0fd058hzquvz7w36x4gtcccycj5"
         )
         self.assertEqual(addr.hrp, "stake")
         self.assertEqual(addr.network_tag, NetworkTag.MAINNET)
-        self.assertEqual(addr.address_type, AddressType.ScriptHash)
+        self.assertEqual(addr.address_type, AddressType.Stake_ScriptHash)
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsNone(addr.components[1])
 
@@ -275,7 +275,7 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsInstance(addr.components[1], Pointer)
 
-    def test_testnet_PaymentKeyHashOnly(self):
+    def test_testnet_PaymentKeyHash(self):
         addr = ShelleyAddress(
             "addr_test1vz2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzerspjrlsz"
         )
@@ -285,7 +285,7 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsNone(addr.components[1])
 
-    def test_testnet_ScriptHashOnly(self):
+    def test_testnet_ScriptHash(self):
         addr = ShelleyAddress(
             "addr_test1wrphkx6acpnf78fuvxn0mkew3l0fd058hzquvz7w36x4gtcl6szpr"
         )
@@ -295,22 +295,22 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsNone(addr.components[1])
 
-    def test_testnet_StakeKeyHash(self):
+    def test_testnet_Stake_StakeKeyHash(self):
         addr = ShelleyAddress(
             "stake_test1uqehkck0lajq8gr28t9uxnuvgcqrc6070x3k9r8048z8y5gssrtvn"
         )
         self.assertEqual(addr.hrp, "stake_test")
         self.assertEqual(addr.network_tag, NetworkTag.TESTNET)
-        self.assertEqual(addr.address_type, AddressType.StakeKeyHash)
+        self.assertEqual(addr.address_type, AddressType.Stake_StakeKeyHash)
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsNone(addr.components[1])
 
-    def test_testnet_ScriptHash(self):
+    def test_testnet_Stake_ScriptHash(self):
         addr = ShelleyAddress(
             "stake_test17rphkx6acpnf78fuvxn0mkew3l0fd058hzquvz7w36x4gtcljw6kf"
         )
         self.assertEqual(addr.hrp, "stake_test")
         self.assertEqual(addr.network_tag, NetworkTag.TESTNET)
-        self.assertEqual(addr.address_type, AddressType.ScriptHash)
+        self.assertEqual(addr.address_type, AddressType.Stake_ScriptHash)
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsNone(addr.components[1])
