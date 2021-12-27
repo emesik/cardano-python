@@ -164,6 +164,9 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertEqual(addr.address_type, AddressType.PaymentKeyHash_Pointer)
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsInstance(addr.components[1], Pointer)
+        self.assertEqual(addr.components[1].slot_num, 2498243)
+        self.assertEqual(addr.components[1].transaction_index, 27)
+        self.assertEqual(addr.components[1].output_index, 3)
 
     def test_mainnet_ScriptHash_Pointer(self):
         addr = ShelleyAddress(
@@ -174,6 +177,9 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertEqual(addr.address_type, AddressType.ScriptHash_Pointer)
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsInstance(addr.components[1], Pointer)
+        self.assertEqual(addr.components[1].slot_num, 2498243)
+        self.assertEqual(addr.components[1].transaction_index, 27)
+        self.assertEqual(addr.components[1].output_index, 3)
 
     def test_mainnet_PaymentKeyHash(self):
         addr = ShelleyAddress(
@@ -264,6 +270,9 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertEqual(addr.address_type, AddressType.PaymentKeyHash_Pointer)
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsInstance(addr.components[1], Pointer)
+        self.assertEqual(addr.components[1].slot_num, 2498243)
+        self.assertEqual(addr.components[1].transaction_index, 27)
+        self.assertEqual(addr.components[1].output_index, 3)
 
     def test_testnet_ScriptHash_Pointer(self):
         addr = ShelleyAddress(
@@ -274,6 +283,9 @@ class TestShelleyAddressDeserialization(unittest.TestCase):
         self.assertEqual(addr.address_type, AddressType.ScriptHash_Pointer)
         self.assertIsInstance(addr.components[0], Hash)
         self.assertIsInstance(addr.components[1], Pointer)
+        self.assertEqual(addr.components[1].slot_num, 2498243)
+        self.assertEqual(addr.components[1].transaction_index, 27)
+        self.assertEqual(addr.components[1].output_index, 3)
 
     def test_testnet_PaymentKeyHash(self):
         addr = ShelleyAddress(

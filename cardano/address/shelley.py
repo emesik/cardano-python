@@ -90,14 +90,14 @@ class Hash(object):
 
 
 class Pointer(object):
-    absolute_slot = 0
-    tx_index = None
+    slot_num = 0
+    transaction_index = None
     output_index = None
 
     def __init__(self, data):
         data = data.copy()
-        self.absolute_slot, data = self._popint(data)
-        self.tx_index, data = self._popint(data)
+        self.slot_num, data = self._popint(data)
+        self.transaction_index, data = self._popint(data)
         self.output_index, data = self._popint(data)
 
     def _popint(self, data):
