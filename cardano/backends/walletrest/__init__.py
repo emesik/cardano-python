@@ -40,6 +40,9 @@ class WalletREST(object):
             "non_null_rewards": main_exceptions.NonNullRewards,
             "cannot_cover_fee": main_exceptions.CannotCoverFee,
         },
+        409: {
+            "wallet_already_exists": main_exceptions.WalletAlreadyExists,
+        },
         500: {
             "created_invalid_transaction": exceptions.CreatedInvalidTransaction,
         },
@@ -76,7 +79,7 @@ class WalletREST(object):
             _log.debug(u"No result (HTTP 204)")
         if rsp.status_code == 400:
             raise exceptions.BadRequest(result["message"], result=result)
-        if rsp.status_code == 403:
+        if rsp.status_code in (403, 409):
             try:
                 raise self.ERR2EXCEPTION[rsp.status_code][result["code"]](
                     result["message"]

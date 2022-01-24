@@ -10,6 +10,18 @@ class BackendException(CardanoException):
     pass
 
 
+class WalletServiceException(CardanoException):
+    """The base exception for wallet service errors."""
+
+    pass
+
+
+class WalletAlreadyExists(WalletServiceException):
+    """Raised when a duplicate wallet is requested to be created at the service."""
+
+    pass
+
+
 class WalletException(CardanoException):
     """The base exception for wallet errors."""
 
