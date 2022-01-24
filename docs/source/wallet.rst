@@ -35,7 +35,7 @@ to obtain that wallet object, you'd have first to create it:
 
     In [2]: from cardano.backends.walletrest import WalletREST
 
-    In [3]: ws = WalletService(WalletREST(posrt=8090))
+    In [3]: ws = WalletService(WalletREST(port=8090))
 
     In [4]: wal = ws.create_wallet(
             name="test wallet",
