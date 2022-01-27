@@ -63,10 +63,13 @@ concluded with version 0.7.
 +------------+---------+--------------------------------------------------------------------------+
 | future     |         | - key operations (HD wallet key generation)                              |
 |            |         | - seed to key and vice versa conversion                                  |
+|            |         | - offline address generation (#8)                                        |
+|            |         | - native assets minting and burning (#13)                                |
+|            |         | - binary transaction backend (#10)                                       |
 |            |         | - coin selection                                                         |
 |            |         | - transaction forgetting                                                 |
 |            |         | - handling of Byron wallets                                              |
-|            |         | - Goguen features (smart contracts?)                                     |
+|            |         | - Goguen features (smart contracts? #15)                                 |
 +------------+---------+--------------------------------------------------------------------------+
 
 
