@@ -166,7 +166,8 @@ class WalletREST(object):
             assets[aid] = assets[aid] if aid in assets else {}
             assets[aid]["available"] = ast["quantity"]
         return {
-            aid: Balance(bal["total"], bal["available"], None)
+            # NOTE: The get() below is due to suspected missing field reported in #14
+            aid: Balance(bal["total"], bal.get("available", Decimal(0)), None)
             for aid, bal in assets.items()
         }
 
