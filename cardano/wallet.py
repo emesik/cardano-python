@@ -141,7 +141,7 @@ class Wallet(object):
         amount,
         assets=None,
         metadata=None,
-        allow_withdrawal=True,
+        allow_withdrawal=False,
         ttl=None,
         passphrase=None,
     ):
@@ -177,7 +177,7 @@ class Wallet(object):
         self,
         destinations,
         metadata=None,
-        allow_withdrawal=True,
+        allow_withdrawal=False,
         ttl=None,
         passphrase=None,
     ):
