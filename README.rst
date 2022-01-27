@@ -4,7 +4,7 @@ Python Cardano module
 **This software is in development phase. Please consider it experimental and don't rely on any
 API to be stable before version 1.0 comes.**
 
-There's release 0.8.1 available. It is usable for basic payment acceptance and spending but more
+There's release 0.8.2 available. It is usable for basic payment acceptance and spending but more
 advanced features haven't been well tested yet.
 
 Prerequisites
