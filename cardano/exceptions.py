@@ -34,6 +34,12 @@ class MissingPassphrase(WalletException):
     pass
 
 
+class WrongPassphrase(WalletException):
+    """Raised when the provided passphrase doesn't match the wallet's."""
+
+    pass
+
+
 class TransactionException(WalletException):
     """Base for errors with constructing or handling transactions."""
 
@@ -41,6 +47,12 @@ class TransactionException(WalletException):
 
 
 class CannotCoverFee(TransactionException):
+    pass
+
+
+class UTXOTooSmall(TransactionException):
+    """Raised when the resulting UTXO with assets has too small ADA amount."""
+
     pass
 
 
@@ -58,5 +70,11 @@ class PoolAlreadyJoined(StakingException):
 
 class NonNullRewards(StakingException):
     """Raised when trying to cancel stake without withdrawing rewards first."""
+
+    pass
+
+
+class AlreadyWithdrawing(StakingException):
+    """Raised whan another withdrawal attempt is being made while one is already pending."""
 
     pass
