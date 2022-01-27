@@ -46,6 +46,12 @@ class TransactionException(WalletException):
     pass
 
 
+class NotEnoughMoney(TransactionException):
+    """Raised when the balance is too low."""
+
+    pass
+
+
 class CannotCoverFee(TransactionException):
     pass
 

@@ -38,6 +38,7 @@ class WalletREST(object):
         403: {
             "pool_already_joined": main_exceptions.PoolAlreadyJoined,
             "non_null_rewards": main_exceptions.NonNullRewards,
+            "not_enough_money": main_exceptions.NotEnoughMoney,
             "cannot_cover_fee": main_exceptions.CannotCoverFee,
             "utxo_too_small": main_exceptions.UTXOTooSmall,
             "wrong_encryption_passphrase": main_exceptions.WrongPassphrase,
