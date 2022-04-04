@@ -52,10 +52,11 @@ class WalletREST(object):
         },
     }
 
-    def __init__(self, protocol="http", host="localhost", port=8090):
+    def __init__(self, protocol="http", host="localhost", port=8090, timeout=None):
         self.base_url = "{protocol}://{host}:{port}/v2/".format(
             protocol=protocol, host=host, port=port
         )
+        self.timeout = timeout or self.timeout
         _log.debug("WalletREST backend url: {:s}".format(self.base_url))
 
     def raw_request(self, method, path, params=None):
