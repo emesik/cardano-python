@@ -57,11 +57,12 @@ class WalletREST(object):
             protocol=protocol, host=host, port=port
         )
         self.timeout = timeout or self.timeout
+        self.session = requests.Session()
+        self.session.headers = {"Content-Type": "application/json"}
         _log.debug("WalletREST backend url: {:s}".format(self.base_url))
 
     def raw_request(self, method, path, params=None):
         url = "".join([self.base_url, path])
-        hdr = {"Content-Type": "application/json"}
         params = params or {}
         _log.debug(
             u"{method} {url}\nParams:\n{params}".format(
@@ -70,8 +71,8 @@ class WalletREST(object):
                 params=json.dumps(params, indent=2, sort_keys=True),
             )
         )
-        rsp = getattr(requests, method.lower())(
-            url, headers=hdr, data=json.dumps(params), timeout=self.timeout
+        rsp = getattr(self.session, method.lower())(
+            url, data=json.dumps(params), timeout=self.timeout
         )
         if rsp.status_code != 204:  # if content exists
             result = rsp.json(parse_float=Decimal)
